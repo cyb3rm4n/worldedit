@@ -46,7 +46,7 @@ public class ClipboardCommands {
     @Command(
         aliases = { "/copy" },
         flags = "e",
-        desc = "Copy the selection to the clipboard",
+        desc = "Копирует выделенную территорию в буфер обмена",
         help = "Copy the selection to the clipboard\n" +
                 "Flags:\n" +
                 "  -e controls whether entities are copied\n" +

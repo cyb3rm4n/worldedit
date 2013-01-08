@@ -54,10 +54,10 @@ public class BrushCommands {
         aliases = { "sphere", "s" },
         usage = "<block> [radius]",
         flags = "h",
-        desc = "Choose the sphere brush",
+        desc = "Выбрать сферическую кисть.",
         help =
-            "Chooses the sphere brush.\n" +
-            "The -h flag creates hollow spheres instead.",
+            "Выбирает сферическую кисть.\n" +
+            "Флаг -h создает полные сферы вместо региона.",
         min = 1,
         max = 2
     )
@@ -69,7 +69,7 @@ public class BrushCommands {
 
         double radius = args.argsLength() > 1 ? args.getDouble(1) : 2;
         if (radius > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius: "
+            player.printError("Максимально допустимый радиус кисти: "
                     + config.maxBrushRadius);
             return;
         }
@@ -85,7 +85,7 @@ public class BrushCommands {
             tool.setBrush(new SphereBrush(), "worldedit.brush.sphere");
         }
 
-        player.print(String.format("Sphere brush shape equipped (%.0f).",
+        player.print(String.format("Форма сферической кисти сформирована (%.0f).",
                 radius));
     }
 
@@ -93,10 +93,10 @@ public class BrushCommands {
         aliases = { "cylinder", "cyl", "c" },
         usage = "<block> [radius] [height]",
         flags = "h",
-        desc = "Choose the cylinder brush",
+        desc = "Выбрать цилиндрическую кисть",
         help =
-            "Chooses the cylinder brush.\n" +
-            "The -h flag creates hollow cylinders instead.",
+            "Выбирает цилиндрическую кисть.\n" +
+            "Флаг -h создает цилиндры вместо региона.",
         min = 1,
         max = 3
     )
@@ -108,14 +108,14 @@ public class BrushCommands {
 
         double radius = args.argsLength() > 1 ? args.getDouble(1) : 2;
         if (radius > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius: "
+            player.printError("Максимально допустимый радиус кисти: "
                     + config.maxBrushRadius);
             return;
         }
 
         int height = args.argsLength() > 2 ? args.getInteger(2) : 1;
         if (height > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius/height: "
+            player.printError("Максимально допустимый радиус кисти: "
                     + config.maxBrushRadius);
             return;
         }
@@ -131,7 +131,7 @@ public class BrushCommands {
             tool.setBrush(new CylinderBrush(height), "worldedit.brush.cylinder");
         }
 
-        player.print(String.format("Cylinder brush shape equipped (%.0f by %d).",
+        player.print(String.format("Форма цилиндрической кисти сформирована (%.0f by %d).",
                 radius, height));
     }
 
@@ -139,10 +139,10 @@ public class BrushCommands {
         aliases = { "clipboard", "copy" },
         usage = "",
         flags = "a",
-        desc = "Choose the clipboard brush",
+        desc = "Выбрать кисть из буфера обмена",
         help =
-            "Chooses the clipboard brush.\n" +
-            "The -a flag makes it not paste air.",
+            "Выбирает кисть из буфера обмена.\n" +
+            "Флаг -a flag makes it not paste air.",
         min = 0,
         max = 0
     )
@@ -155,7 +155,7 @@ public class BrushCommands {
         CuboidClipboard clipboard = session.getClipboard();
 
         if (clipboard == null) {
-            player.printError("Copy something first.");
+            player.printError("Сначала скопируйте что-нибудь.");
             return;
         }
 
@@ -164,7 +164,7 @@ public class BrushCommands {
         if (size.getBlockX() > config.maxBrushRadius
                 || size.getBlockY() > config.maxBrushRadius
                 || size.getBlockZ() > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius/height: "
+            player.printError("Максимально допустимый радиус кисти: "
                     + config.maxBrushRadius);
             return;
         }
@@ -172,20 +172,20 @@ public class BrushCommands {
         BrushTool tool = session.getBrushTool(player.getItemInHand());
         tool.setBrush(new ClipboardBrush(clipboard, args.hasFlag('a')), "worldedit.brush.clipboard");
 
-        player.print("Clipboard brush shape equipped.");
+        player.print("Форма кисти сформирована.");
     }
-
     @Command(
         aliases = { "smooth" },
         usage = "[size] [iterations]",
         flags = "n",
-        desc = "Choose the terrain softener brush",
+        desc = "Выбрать смягчительную кисть.",
         help =
-            "Chooses the terrain softener brush.\n" +
-            "The -n flag makes it only consider naturally occuring blocks.",
+            "Выбирает смягчительную кисть.\n" +
+            "Флаг -n смягчает только встречающиеся в природе блоки.",
         min = 0,
         max = 2
     )
+
     @CommandPermissions("worldedit.brush.smooth")
     public void smoothBrush(CommandContext args, LocalSession session,
             LocalPlayer player, EditSession editSession) throws WorldEditException {
@@ -194,7 +194,7 @@ public class BrushCommands {
 
         double radius = args.argsLength() > 0 ? args.getDouble(0) : 2;
         if (radius > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius: "
+            player.printError("Максимально допустимый радиус кисти: "
                     + config.maxBrushRadius);
             return;
         }
@@ -205,14 +205,14 @@ public class BrushCommands {
         tool.setSize(radius);
         tool.setBrush(new SmoothBrush(iterations, args.hasFlag('n')), "worldedit.brush.smooth");
 
-        player.print(String.format("Smooth brush equipped (%.0f x %dx, using " + (args.hasFlag('n') ? "natural blocks only" : "any block") + ").",
+        player.print(String.format("Разравнительная кисть сформирована (%.0f x %dx, используя " + (args.hasFlag('n') ? "только натуральные блоки" : "любой блок") + ").",
                 radius, iterations));
     }
 
     @Command(
         aliases = { "ex", "extinguish" },
         usage = "[radius]",
-        desc = "Shortcut fire extinguisher brush",
+        desc = "Тушит огонь с заданным радиусом.",
         min = 0,
         max = 1
     )
@@ -224,7 +224,7 @@ public class BrushCommands {
 
         double radius = args.argsLength() > 1 ? args.getDouble(1) : 5;
         if (radius > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius: "
+            player.printError("Максимально допустимый радиус кисти: "
                     + config.maxBrushRadius);
             return;
         }
@@ -236,19 +236,18 @@ public class BrushCommands {
         tool.setMask(new BlockMask(new BaseBlock(BlockID.FIRE)));
         tool.setBrush(new SphereBrush(), "worldedit.brush.ex");
 
-        player.print(String.format("Extinguisher equipped (%.0f).",
+        player.print(String.format("Форма огнетушительной кисти сформирована (%.0f).",
                 radius));
     }
-
     @Command(
             aliases = { "gravity", "grav" },
             usage = "[radius]",
             flags = "h",
             desc = "Gravity brush",
             help =
-                "This brush simulates the affect of gravity.\n" +
-                "The -h flag makes it affect blocks starting at the world's max y, " +
-                    "instead of the clicked block's y + radius.",
+                "Эта кисть имитирует влияние гравитации.\n" +
+                "Флаг -h делает влияние гравитации на блоки,начиная с y, " +
+                    "вместо выделенных блоков y + радиус.",
             min = 0,
             max = 1
     )
@@ -260,7 +259,7 @@ public class BrushCommands {
 
         double radius = args.argsLength() > 0 ? args.getDouble(0) : 5;
         if (radius > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius: "
+            player.printError("Максимально допустимый радиус кисти: "
                     + config.maxBrushRadius);
             return;
         }
@@ -269,7 +268,7 @@ public class BrushCommands {
         tool.setSize(radius);
         tool.setBrush(new GravityBrush(args.hasFlag('h')), "worldedit.brush.gravity");
 
-        player.print(String.format("Gravity brush equipped (%.0f).",
+        player.print(String.format("Форма гравитационной кисти сформирована (%.0f).",
                 radius));
     }
 }
