@@ -1392,7 +1392,7 @@ public class WorldEdit {
             try {
                 commands.execute(split, player, session, player, editSession);
             } catch (CommandPermissionsException e) {
-                player.printError("You don't have permission to do this.");
+                player.printError("У Вас не достаточноп рав на использование данной команды.");
             } catch (MissingNestedCommandException e) {
                 player.printError(e.getUsage());
             } catch (CommandUsageException e) {
