@@ -42,7 +42,7 @@ public class ToolUtilCommands {
     @Command(
         aliases = { "/", "," },
         usage = "[on|off]",
-        desc = "Toggle the super pickaxe pickaxe function",
+        desc = "Переключет состояние супер-кирки",
         min = 0,
         max = 1
     )
@@ -53,26 +53,26 @@ public class ToolUtilCommands {
         String newState = args.getString(0, null);
         if (session.hasSuperPickAxe()) {
             if ("on".equals(newState)) {
-                player.printError("Super pick axe already enabled.");
+                player.printError("Супер-кирка и так включена.");
                 return;
             }
 
             session.disableSuperPickAxe();
-            player.print("Super pick axe disabled.");
+            player.print("Супер-кирка выключена.");
         } else {
             if ("off".equals(newState)) {
-                player.printError("Super pick axe already disabled.");
+                player.printError("Супер-кирка и так выключена.");
                 return;
             }
             session.enableSuperPickAxe();
-            player.print("Super pick axe enabled.");
+            player.print("Супер-кирка выключена.");
         }
 
     }
 
     @Command(
         aliases = { "superpickaxe", "pickaxe", "sp" },
-        desc = "Select super pickaxe mode"
+        desc = "Выбирает режим супер-кирки"
     )
     @NestedCommand(SuperPickaxeCommands.class)
     public void pickaxe(CommandContext args, LocalSession session, LocalPlayer player,
@@ -81,7 +81,7 @@ public class ToolUtilCommands {
 
     @Command(
         aliases = {"tool"},
-        desc = "Select a tool to bind"
+        desc = "Выбирает предмет для привязки"
     )
     @NestedCommand(ToolCommands.class)
     public void tool(CommandContext args, LocalSession session, LocalPlayer player,
@@ -91,7 +91,7 @@ public class ToolUtilCommands {
     @Command(
         aliases = { "mask" },
         usage = "[mask]",
-        desc = "Set the brush mask",
+        desc = "Выставляет маску кисти",
         min = 0,
         max = -1
     )
@@ -100,18 +100,18 @@ public class ToolUtilCommands {
             EditSession editSession) throws WorldEditException {
         if (args.argsLength() == 0) {
             session.getBrushTool(player.getItemInHand()).setMask(null);
-            player.print("Brush mask disabled.");
+            player.print("Маска кисти очищена.");
         } else {
             Mask mask = we.getBlockMask(player, session, args.getJoinedStrings(0));
             session.getBrushTool(player.getItemInHand()).setMask(mask);
-            player.print("Brush mask set.");
+            player.print("Маска кисти выставлена.");
         }
     }
 
     @Command(
         aliases = { "mat", "material", "fill" },
         usage = "[pattern]",
-        desc = "Set the brush material",
+        desc = "Выставляет материал кисти",
         min = 1,
         max = 1
     )
@@ -120,13 +120,13 @@ public class ToolUtilCommands {
             EditSession editSession) throws WorldEditException {
         Pattern pattern = we.getBlockPattern(player, args.getString(0));
         session.getBrushTool(player.getItemInHand()).setFill(pattern);
-        player.print("Brush material set.");
+        player.print("Материал кисти выставлен.");
     }
 
     @Command(
             aliases = { "range" },
             usage = "[pattern]",
-            desc = "Set the brush range",
+            desc = "Выставляет диапазон кисти",
             min = 1,
             max = 1
         )
@@ -135,13 +135,13 @@ public class ToolUtilCommands {
             EditSession editSession) throws WorldEditException {
         int range = args.getInteger(0);
         session.getBrushTool(player.getItemInHand()).setRange(range);
-        player.print("Brush range set.");
+        player.print("Размер диапазон выставлен.");
     }
 
     @Command(
         aliases = { "size" },
         usage = "[pattern]",
-        desc = "Set the brush size",
+        desc = "Выставляет размер кисти",
         min = 1,
         max = 1
     )
@@ -153,12 +153,12 @@ public class ToolUtilCommands {
 
         int radius = args.getInteger(0);
         if (radius > config.maxBrushRadius) {
-            player.printError("Maximum allowed brush radius: "
+            player.printError("Максимальный размер кисти органичен: "
                     + config.maxBrushRadius);
             return;
         }
 
         session.getBrushTool(player.getItemInHand()).setSize(radius);
-        player.print("Brush size set.");
+        player.print("Размер кисти выставлен.");
     }
 }
