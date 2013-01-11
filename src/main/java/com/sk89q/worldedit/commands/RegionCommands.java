@@ -62,7 +62,7 @@ public class RegionCommands {
     @Command(
         aliases = { "/set" },
         usage = "<block>",
-        desc = "Set all the blocks inside the selection to a block",
+        desc = "Заполняет выделенную территорию блоками.",
         min = 1,
         max = 1
     )
@@ -81,14 +81,14 @@ public class RegionCommands {
         } else {
             affected = editSession.setBlocks(session.getSelection(player.getWorld()), pattern);
         }
-
-        player.print(affected + " block(s) have been changed.");
+        //TODO: Множественное число
+        player.print(affected + " блок(и) был(и) изменен(о,ы).");
     }
 
     @Command(
         aliases = { "/replace", "/re", "/rep" },
         usage = "[from-block] <to-block>",
-        desc = "Replace all blocks in the selection with another",
+        desc = "Заменяет все блоки в выделенной территории на другие",
         flags = "f",
         min = 1,
         max = 2
@@ -115,14 +115,14 @@ public class RegionCommands {
         } else {
             affected = editSession.replaceBlocks(session.getSelection(player.getWorld()), from, to);
         }
-
-        player.print(affected + " block(s) have been replaced.");
+        //TODO: Множественное число
+        player.print(affected + " блок(и) был(и) заменен(ы,о).");
     }
 
     @Command(
         aliases = { "/overlay" },
         usage = "<block>",
-        desc = "Set a block on top of blocks in the region",
+        desc = "Накладывает блоки поверх выделенной территории.",
         min = 1,
         max = 1
     )
@@ -141,13 +141,14 @@ public class RegionCommands {
         } else {
             affected = editSession.overlayCuboidBlocks(region, pat);
         }
-        player.print(affected + " block(s) have been overlayed.");
+        //TODO: Множественное число
+        player.print(affected + " блок(и) был(и) наложен(ы,о).");
     }
 
     @Command(
         aliases = { "/center", "/middle" },
         usage = "<block>",
-        desc = "Set the center block(s)",
+        desc = "Задать центральные блок(и)",
         min = 1,
         max = 1
     )
@@ -159,13 +160,13 @@ public class RegionCommands {
         Region region = session.getSelection(player.getWorld());
 
         int affected = editSession.center(region, pattern);
-        player.print("Center set ("+ affected + " blocks changed)");
+        player.print("Центер задан ("+ affected + " блок(и) изменен(ы))");
     }
 
     @Command(
         aliases = { "/naturalize" },
         usage = "",
-        desc = "3 layers of dirt on top then rock below",
+        desc = "Создает 3 слоя грязи сверху и камень под ней.",
         min = 0,
         max = 0
     )
@@ -176,13 +177,14 @@ public class RegionCommands {
 
         Region region = session.getSelection(player.getWorld());
         int affected = editSession.naturalizeCuboidBlocks(region);
-        player.print(affected + " block(s) have been naturalized.");
+        //TODO: Множественное число
+        player.print(affected + " блок(и) был(и) изменен(ы).");
     }
 
     @Command(
         aliases = { "/walls" },
         usage = "<block>",
-        desc = "Build the four sides of the selection",
+        desc = "Создает стены в выделенной территории",
         min = 1,
         max = 1
     )
@@ -199,13 +201,13 @@ public class RegionCommands {
             affected = editSession.makeCuboidWalls(session.getSelection(player.getWorld()), pattern);
         }
 
-        player.print(affected + " block(s) have been changed.");
+        player.print(affected + " блок(и) был(и) изменены.");
     }
 
     @Command(
         aliases = { "/faces", "/outline" },
         usage = "<block>",
-        desc = "Build the walls, ceiling, and floor of a selection",
+        desc = "Строит стены, пол и потолок в выделенной территории",
         min = 1,
         max = 1
     )
@@ -222,17 +224,17 @@ public class RegionCommands {
             affected = editSession.makeCuboidFaces(session.getSelection(player.getWorld()), pattern);
         }
 
-        player.print(affected + " block(s) have been changed.");
+        player.print(affected + " блок(и) был(и) изменен(ы).");
     }
 
     @Command(
         aliases = { "/smooth" },
         usage = "[iterations]",
         flags = "n",
-        desc = "Smooth the elevation in the selection",
+        desc = "Сглаживание возвышенностей в выделенной территории.",
         help =
-            "Smooths the elevation in the selection.\n" +
-            "The -n flag makes it only consider naturally occuring blocks.",
+            "Сглаживает возвышенности в выделенной территории.\n" +
+            "Флаг -n применяет сглаживание только на натуральные блоки(природа).",
         min = 0,
         max = 1
     )
@@ -249,7 +251,8 @@ public class RegionCommands {
         HeightMap heightMap = new HeightMap(editSession, session.getSelection(player.getWorld()), args.hasFlag('n'));
         HeightMapFilter filter = new HeightMapFilter(new GaussianKernel(5, 1.0));
         int affected = heightMap.applyFilter(filter, iterations);
-        player.print("Terrain's height map smoothed. " + affected + " block(s) changed.");
+       //TODO: Множественное число
+        player.print("Высоты сглажены. " + affected + " блок(и) изменен(ы).");
 
     }
 
@@ -257,11 +260,11 @@ public class RegionCommands {
         aliases = { "/move" },
         usage = "[count] [direction] [leave-id]",
         flags = "s",
-        desc = "Move the contents of the selection",
+        desc = "Перемещение содержимого выделенной территории",
         help =
-            "Moves the contents of the selection.\n" +
-            "The -s flag shifts the selection to the target location.\n" +
-            "Optionally fills the old location with <leave-id>.",
+            "Перемещает содержимое выделенной территории.\n" +
+            "Флаг -s смещает выделенную территорию на нужное место.\n" +
+            "При необходимости заполняется в старом месте с <id>.",
         min = 0,
         max = 3
     )
@@ -297,19 +300,19 @@ public class RegionCommands {
             }
         }
 
-        player.print(affected + " blocks moved.");
+        player.print(affected + " блок(и) перемещен(ы).");
     }
 
     @Command(
         aliases = { "/stack" },
         usage = "[count] [direction]",
         flags = "sa",
-        desc = "Repeat the contents of the selection",
+        desc = "Повторение содержимого выделенной территории",
         help =
-            "Repeats the contents of the selection.\n" +
-            "Flags:\n" +
-            "  -s shifts the selection to the last stacked copy\n" +
-            "  -a skips air blocks",
+            "Повторяет содержимое выделенной территории.\n" +
+            "Флаги:\n" +
+            "  -s смещает выделенную территорию на последнюю копию\n" +
+            "  -a пропускает блоки воздуха.",
         min = 0,
         max = 2
     )
@@ -340,17 +343,17 @@ public class RegionCommands {
             }
         }
 
-        player.print(affected + " blocks changed. Undo with //undo");
+        player.print(affected + " блок(и) изменены. Отмена с помощью команды //undo");
     }
 
     @Command(
         aliases = { "/regen" },
         usage = "",
-        desc = "Regenerates the contents of the selection",
+        desc = "Регенерация содержимого выделенной территории",
         help =
-            "Regenerates the contents of the current selection.\n" +
-            "This command might affect things outside the selection,\n" +
-            "if they are within the same chunk.",
+            "Регенерирует содержимое выделенной территории.\n" +
+            "Эта команда может повлиять на вещи вне выделенной территории,\n" +
+            "если они находятся в одном чанке.",
         min = 0,
         max = 0
     )
@@ -364,18 +367,18 @@ public class RegionCommands {
         session.setMask(null);
         player.getWorld().regenerate(region, editSession);
         session.setMask(mask);
-        player.print("Region regenerated.");
+        player.print("Регион регенерирован.");
     }
 
     @Command(
             aliases = { "/deform" },
             usage = "<expression>",
-            desc = "Deforms a selected region with an expression",
+            desc = "Искажение выделенной территории с выражением.",
             help =
-                "Deforms a selected region with an expression\n" +
-                "The expression is executed for each block and is expected\n" +
-                "to modify the variables x, y and z to point to a new block\n" +
-                "to fetch. See also tinyurl.com/wesyntax.",
+                "Искажает выделенную территорию с выражением\n" +
+                "Выражение выполняется для каждого блока, и \n" +
+                "для изменения переменных x, y, r, чтобы указать новые блоки\n" +
+                "для извлечения. Смотрите также tinyurl.com/wesyntax.",
             flags = "ro",
             min = 1,
             max = -1
@@ -413,7 +416,7 @@ public class RegionCommands {
         try {
             final int affected = editSession.deformRegion(region, zero, unit, expression);
             player.findFreePosition();
-            player.print(affected + " block(s) have been deformed.");
+            player.print(affected + " блок(и) был(и) деформирован(ы).");
         } catch (ExpressionException e) {
             player.printError(e.getMessage());
         }
@@ -422,11 +425,11 @@ public class RegionCommands {
     @Command(
         aliases = { "/hollow" },
         usage = "[<thickness>[ <block>]]",
-        desc = "Hollows out the object contained in this selection",
+        desc = "Создание впадин из объектов, содержащихся в этой территории",
         help =
-            "Hollows out the object contained in this selection.\n" +
-            "Optionally fills the hollowed out part with the given block.\n" +
-            "Thickness is measured in manhattan distance.",
+            "Создает вадины из объектов, содержащихся в этой территории.\n" +
+            "При необходимости заполняет выдолбленные части блоками.\n" +
+            "Толщина измеряется на расстоянии Манхэттена.",
         min = 0,
         max = 2
     )
@@ -440,6 +443,6 @@ public class RegionCommands {
 
         final int affected = editSession.hollowOutRegion(session.getSelection(player.getWorld()), thickness, pattern);
 
-        player.print(affected + " block(s) have been changed.");
+        player.print(affected + " блок(и) был(и) изменены.");
     }
 }

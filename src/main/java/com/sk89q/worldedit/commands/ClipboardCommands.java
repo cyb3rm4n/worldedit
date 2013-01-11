@@ -47,10 +47,10 @@ public class ClipboardCommands {
         aliases = { "/copy" },
         flags = "e",
         desc = "Копирует выделенную территорию в буфер обмена",
-        help = "Copy the selection to the clipboard\n" +
-                "Flags:\n" +
-                "  -e controls whether entities are copied\n" +
-                "WARNING: Pasting entities cannot yet be undone!",
+        help = "Копирует выделенную территорию в буфер обмен\n" +
+                "Флаги:\n" +
+                "  -e определяет, будут ли объекты копироваться в буфер обмена\n" +
+                "ПРЕДУПРЕЖДЕНИЕ: Вставленные объекты не могут быть отменены!",
         min = 0,
         max = 0
     )
@@ -80,11 +80,11 @@ public class ClipboardCommands {
     @Command(
         aliases = { "/cut" },
         usage = "[leave-id]",
-        desc = "Cut the selection to the clipboard",
-        help = "Copy the selection to the clipboard\n" +
-                "Flags:\n" +
-                "  -e controls whether entities are copied\n" +
-                "WARNING: Cutting and pasting entities cannot yet be undone!",
+        desc = "Вырезает выделенную территорию в буфер обмена",
+        help = "Вырезает выделенную территорию в буфер обмена\n" +
+                "Флаги:\n" +
+                "  -e controls определяет, будут ли объекты копироваться в буфер обмена\n" +
+                "ПРЕДУПРЕЖДЕНИЕ: Вырезанные и вставленные объекты не могут быть отменены!",
         flags = "e",
         min = 0,
         max = 1
@@ -120,19 +120,20 @@ public class ClipboardCommands {
         session.setClipboard(clipboard);
 
         editSession.setBlocks(session.getSelection(world), block);
-        player.print("Block(s) cut.");
+        //TODO: Множественное число
+        player.print("Блок(и) вырезан(ы).");
     }
 
     @Command(
         aliases = { "/paste" },
         usage = "",
         flags = "ao",
-        desc = "Paste the clipboard's contents",
+        desc = "Вставляет содержимое буфера обмена",
         help =
-            "Pastes the clipboard's contents.\n" +
-            "Flags:\n" +
-            "  -a skips air blocks\n" +
-            "  -o pastes at the original position",
+            "Вставить содержимое буфера обмена.\n" +
+            "Флаги:\n" +
+            "  -a пропускает блоки воздуха\n" +
+            "  -o вставляет на позициях, которые были скопированы/вырезаны",
         min = 0,
         max = 0
     )
@@ -149,19 +150,19 @@ public class ClipboardCommands {
             session.getClipboard().place(editSession, pos, pasteNoAir);
             session.getClipboard().pasteEntities(pos);
             player.findFreePosition();
-            player.print("Pasted to copy origin. Undo with //undo");
+            player.print("Вставлено. Для отмены напишите //undo");
         } else {
             Vector pos = session.getPlacementPosition(player);
             session.getClipboard().paste(editSession, pos, pasteNoAir, true);
             player.findFreePosition();
-            player.print("Pasted relative to you. Undo with //undo");
+            player.print("Вставлено. Для отмены напишите //undo");
         }
     }
 
     @Command(
         aliases = { "/rotate" },
         usage = "<angle-in-degrees>",
-        desc = "Rotate the contents of the clipboard",
+        desc = "Поворот содержимого буфера обмена",
         min = 1,
         max = 1
     )
@@ -174,21 +175,21 @@ public class ClipboardCommands {
         if (angle % 90 == 0) {
             CuboidClipboard clipboard = session.getClipboard();
             clipboard.rotate2D(angle);
-            player.print("Clipboard rotated by " + angle + " degrees.");
+            player.print("Содержимое буфера обмена повернуто на " + angle + " градусов.");
         } else {
-            player.printError("Angles must be divisible by 90 degrees.");
+            player.printError("Углы должны делиться на 90 градусов.");
         }
     }
-
+      //TODO: Перевести instead of the selections center
     @Command(
         aliases = { "/flip" },
         usage = "[dir]",
         flags = "p",
-        desc = "Flip the contents of the clipboard.",
+        desc = "Переворачивает содержимое буфера обмена.",
         help =
-            "Flips the contents of the clipboard.\n" +
-            "The -p flag flips the selection around the player,\n" +
-            "instead of the selections center.",
+            "Переворачивает содержимое буфера обмена.\n" +
+            "Флаг -p переворачивает выделенную территорию вокруг игрока,\n" +
+            "а не центра выделения.",
         min = 0,
         max = 1
     )
@@ -201,13 +202,13 @@ public class ClipboardCommands {
 
         CuboidClipboard clipboard = session.getClipboard();
         clipboard.flip(dir, args.hasFlag('p'));
-        player.print("Clipboard flipped.");
+        player.print("Содержимое буфера обмена перевернуто.");
     }
 
     @Command(
         aliases = { "/load" },
         usage = "<filename>",
-        desc = "Load a schematic into your clipboard",
+        desc = "Загружает схематический файл в буфер обмена.",
         min = 0,
         max = 1
     )
@@ -215,13 +216,13 @@ public class ClipboardCommands {
     @CommandPermissions("worldedit.clipboard.load")
     public void load(CommandContext args, LocalSession session, LocalPlayer player,
             EditSession editSession) throws WorldEditException {
-        player.printError("This command is no longer used. See //schematic load.");
+        player.printError("Эта команда больше не используется. Пишите //schematic load.");
     }
 
     @Command(
         aliases = { "/save" },
         usage = "<filename>",
-        desc = "Save a schematic into your clipboard",
+        desc = "Сохраняет буфер обмена в схематический файл.",
         min = 0,
         max = 1
     )
@@ -229,12 +230,12 @@ public class ClipboardCommands {
     @CommandPermissions("worldedit.clipboard.save")
     public void save(CommandContext args, LocalSession session, LocalPlayer player,
             EditSession editSession) throws WorldEditException {
-        player.printError("This command is no longer used. See //schematic save.");
+        player.printError("Эта команда больше не используется. Пишите //schematic save.");
     }
 
     @Command(
             aliases = { "/schematic", "/schem"},
-            desc = "Schematic-related commands"
+            desc = "Команды, связанные с буфером обмена и схематическими файлами."
     )
     @NestedCommand(SchematicCommands.class)
     public void schematic() {}
@@ -242,7 +243,7 @@ public class ClipboardCommands {
     @Command(
         aliases = { "clearclipboard" },
         usage = "",
-        desc = "Clear your clipboard",
+        desc = "Очищает Ваш буфер обмена",
         min = 0,
         max = 0
     )
@@ -251,6 +252,6 @@ public class ClipboardCommands {
             EditSession editSession) throws WorldEditException {
 
         session.setClipboard(null);
-        player.print("Clipboard cleared.");
+        player.print("Буфер обмена очищен.");
     }
 }
