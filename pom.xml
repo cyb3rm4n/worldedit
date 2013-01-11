@@ -30,6 +30,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <repositories>
+      <repository>
+          <id>bukkit-ru</id>
+          <url>http://mc-repo.alexbond.info/artifactory/repo/</url>
+      </repository>
     <repository>
       <id>sk89q-repo</id>
       <url>http://maven.sk89q.com/repo/</url>
