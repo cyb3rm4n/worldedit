@@ -130,7 +130,6 @@ public class GenerationCommands {
 
         Vector pos = session.getPlacementPosition(player);
         int affected = editSession.makeCylinder(pos, block, radiusX, radiusZ, height, true);
-        //(TODO: Множественное число)
         player.print(affected + " " + StringUtil.plural(affected, "блок был создан", "блока было создано", "блоков было создано") + ".");
     }
 
@@ -235,7 +234,6 @@ public class GenerationCommands {
 
         int affected = editSession.makeSphere(pos, block, radiusX, radiusY, radiusZ, true);
         player.findFreePosition();
-        //TODO: Множественное число
         player.print(affected + " " + StringUtil.plural(affected, "блок был создан", "блока было создано", "блоков было создано") + ".");
     }
 
@@ -265,8 +263,7 @@ public class GenerationCommands {
 
         int affected = editSession.makeForest(player.getPosition(),
                 size, density, new TreeGenerator(type));
-        //(TODO: Множественное число)
-        player.print(affected + " дерево(ьев) был(о,и) создано(ы).");
+        player.print(affected + " " + StringUtil.plural(affected, "дерево было создано", "дерева было создано", "деревьев было создано") + ".");
     }
 
     @Command(
@@ -284,8 +281,7 @@ public class GenerationCommands {
         int size = args.argsLength() > 0 ? Math.max(1, args.getInteger(0)) : 10;
 
         int affected = editSession.makePumpkinPatches(player.getPosition(), size);
-        //(TODO: Множественное число)
-        player.print(affected + " тыкв(а) был(а) создана(ы).");
+        player.print(affected + " " + StringUtil.plural(affected, "тыква была создано", "тыквы было создано", "тыкв было создано") + ".");
     }
 
     @Command(

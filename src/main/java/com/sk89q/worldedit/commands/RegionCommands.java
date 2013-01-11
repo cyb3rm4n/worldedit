@@ -82,7 +82,6 @@ public class RegionCommands {
         } else {
             affected = editSession.setBlocks(session.getSelection(player.getWorld()), pattern);
         }
-        //TODO: Множественное число
         player.print(affected + " " + StringUtil.plural(affected, "блок изменен", "блока изменено", "блоков изменено") + ".");
     }
 
@@ -116,7 +115,6 @@ public class RegionCommands {
         } else {
             affected = editSession.replaceBlocks(session.getSelection(player.getWorld()), from, to);
         }
-        //TODO: Множественное число
         player.print(affected + " " + StringUtil.plural(affected, "блок заменен", "блока заменено", "блоков заменено") + ".");
     }
 
@@ -142,7 +140,6 @@ public class RegionCommands {
         } else {
             affected = editSession.overlayCuboidBlocks(region, pat);
         }
-        //TODO: Множественное число
         player.print(affected + " " + StringUtil.plural(affected, "блок наложен", "блока наложено", "блоков наложено") + ".");
     }
 
@@ -178,7 +175,6 @@ public class RegionCommands {
 
         Region region = session.getSelection(player.getWorld());
         int affected = editSession.naturalizeCuboidBlocks(region);
-        //TODO: Множественное число
         player.print(affected + " " + StringUtil.plural(affected, "блок был изменен", "блока было изменено", "блоков было изменено") + ".");
     }
 
@@ -252,7 +248,6 @@ public class RegionCommands {
         HeightMap heightMap = new HeightMap(editSession, session.getSelection(player.getWorld()), args.hasFlag('n'));
         HeightMapFilter filter = new HeightMapFilter(new GaussianKernel(5, 1.0));
         int affected = heightMap.applyFilter(filter, iterations);
-        //TODO: Множественное число
         player.print("Высоты сглажены. " + affected + " " + StringUtil.plural(affected, "блок изменен", "блока изменено", "блоков изменено") + ".");
 
     }
