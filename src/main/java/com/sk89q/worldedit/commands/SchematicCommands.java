@@ -53,11 +53,11 @@ public class SchematicCommands {
     @Command(
             aliases = { "load", "l" },
             usage = "[format] <filename>",
-            desc = "Load a schematic into your clipboard",
-            help = "Load a schematic into your clipboard\n" +
-                    "Format is a format from \"//schematic formats\"\n" +
-                    "If the format is not provided, WorldEdit will\n" +
-                    "attempt to automatically detect the format of the schematic",
+            desc = "Загрузка схемы в буфер обмена.",
+            help = "Загружает схему в буфер обмена.\n" +
+                    "Список форматов Вы можете узнать из команды \"//schematic formats\"\n" +
+                    "Если формат не предусмотрен, WorldEdit будет\n" +
+                    "пытаться автоматически определить формат схемы",
             flags = "f",
             min = 1,
             max = 2
@@ -81,7 +81,7 @@ public class SchematicCommands {
         File f = we.getSafeOpenFile(player, dir, fileName, "schematic", "schematic");
 
         if (!f.exists()) {
-            player.printError("Schematic " + fileName + " does not exist!");
+            player.printError("Схематический файл " + fileName + " не найден!");
             return;
         }
 
@@ -91,12 +91,12 @@ public class SchematicCommands {
         }
 
         if (format == null) {
-            player.printError("Unknown schematic format: " + formatName);
+            player.printError("Неизвестный тип схематического файла: " + formatName);
             return;
         }
 
         if (!format.isOfFormat(f) && !args.hasFlag('f')) {
-            player.printError(fileName + " is not of the " + format.getName() + " schematic format!");
+            player.printError(fileName + " не " + format.getName() + " схематический файл!");
             return;
         }
 
@@ -105,25 +105,25 @@ public class SchematicCommands {
             String dirPath = dir.getCanonicalPath();
 
             if (!filePath.substring(0, dirPath.length()).equals(dirPath)) {
-                player.printError("Schematic could not read or it does not exist.");
+                player.printError("Схема не может быть прочитана или она несуществует.");
             } else {
                 session.setClipboard(format.load(f));
                 WorldEdit.logger.info(player.getName() + " loaded " + filePath);
-                player.print(fileName + " loaded. Paste it with //paste");
+                player.print("Схема "+ fileName + " загружена. Вставка из буфера обмена //paste");
             }
         } catch (DataException e) {
-            player.printError("Load error: " + e.getMessage());
+            player.printError("Ошибка при загрузке: " + e.getMessage());
         } catch (IOException e) {
-            player.printError("Schematic could not read or it does not exist: " + e.getMessage());
+            player.printError("Схема не может быть прочитана или она несуществует: " + e.getMessage());
         }
     }
 
     @Command(
             aliases = { "save", "s" },
             usage = "[format] <filename>",
-            desc = "Save a schematic into your clipboard",
-            help = "Save a schematic into your clipboard\n" +
-                    "Format is a format from \"//schematic formats\"\n",
+            desc = "Сохранение схемы из буфера обмена",
+            help = "Сохарняет схему из буфера обмена\n" +
+                    "Список форматов Вы можете узнать из команды \"//schematic formats\"\n",
             min = 1,
             max = 2
     )
@@ -137,13 +137,13 @@ public class SchematicCommands {
             if (SchematicFormat.getFormats().size() == 1) {
                 format = SchematicFormat.getFormats().iterator().next();
             } else {
-                player.printError("More than one schematic format is available. Please provide the desired format");
+                player.printError("Более одного форматов схем доступны. Пожалуйста, укажите желаемый формат.");
                 return;
             }
         } else {
             format = SchematicFormat.getFormat(args.getString(0));
             if (format == null) {
-                player.printError("Unknown schematic format: " + args.getString(0));
+                player.printError("Неизвестный формат схематического файла: " + args.getString(0));
                 return;
             }
         }
@@ -155,7 +155,7 @@ public class SchematicCommands {
 
         if (!dir.exists()) {
             if (!dir.mkdir()) {
-                player.printError("The storage folder could not be created.");
+                player.printError("Папка со схемами не может быть создана!");
                 return;
             }
         }
@@ -165,30 +165,30 @@ public class SchematicCommands {
             File parent = f.getParentFile();
             if (parent != null && !parent.exists()) {
                 if (!parent.mkdirs()) {
-                    throw new CommandException("Could not create folder for schematics!");
+                    throw new CommandException("Папка со схемами не может быть создана!");
                 }
             }
 
             format.save(session.getClipboard(), f);
-            WorldEdit.logger.info(player.getName() + " saved " + f.getCanonicalPath());
-            player.print(filename + " saved.");
+            WorldEdit.logger.info(player.getName() + " сохраенна " + f.getCanonicalPath());
+            player.print("Схема " + filename + " сохранен.");
         } catch (DataException se) {
-            player.printError("Save error: " + se.getMessage());
+            player.printError("Ошибка при сохранении: " + se.getMessage());
         } catch (IOException e) {
-            player.printError("Schematic could not written: " + e.getMessage());
+            player.printError("Схематический файл не может быть создан: " + e.getMessage());
         }
     }
 
     @Command(
             aliases = {"formats", "listformats", "f"},
-            desc = "List available schematic formats",
+            desc = "Показывает список всех доступных форматов",
             max = 0
     )
     @Console
     @CommandPermissions("worldedit.schematic.formats")
     public void formats(CommandContext args, LocalSession session, LocalPlayer player,
                      EditSession editSession) throws WorldEditException {
-        player.print("Available schematic formats (Name: Lookup names)");
+        player.print("Доступные форматы:");
         StringBuilder builder;
         boolean first = true;
         for (SchematicFormat format : SchematicFormat.getFormats()) {
@@ -208,12 +208,12 @@ public class SchematicCommands {
 
     @Command(
             aliases = {"list", "all", "ls"},
-            desc = "List available schematics",
+            desc = "Список всех схем",
             max = 0,
             flags = "dn",
-            help = "List all schematics in the schematics directory\n" +
-                    " -d sorts by date, oldest first\n" +
-                    " -n sorts by date, newest first\n"
+            help = "Показывает список всех схем из папки со схемами\n" +
+                    " Флаг -d сортирует по даты, старые первее\n" +
+                    " -n сортирует по дате, новые первее\n"
     )
     @Console
     @CommandPermissions("worldedit.schematic.list")
@@ -222,9 +222,9 @@ public class SchematicCommands {
         File dir = we.getWorkingDirectoryFile(we.getConfiguration().saveDir);
         File[] files = dir.listFiles();
         if (files == null) {
-            throw new FilenameResolutionException(dir.getPath(), "Schematics directory invalid or not found.");
+            throw new FilenameResolutionException(dir.getPath(), "Папка со схемами повреждена или она отсутствует.");
         }
-        StringBuilder build = new StringBuilder("Available schematics (Filename (Format)): ");
+        StringBuilder build = new StringBuilder("Доступные схемы (Имена файлов (Форматы)): ");
         boolean first = true;
 
         final int sortType = args.hasFlag('d') ? -1 : args.hasFlag('n') ? 1 : 0;

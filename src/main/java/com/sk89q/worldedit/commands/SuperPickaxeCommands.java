@@ -42,7 +42,7 @@ public class SuperPickaxeCommands {
     @Command(
         aliases = { "single" },
         usage = "",
-        desc = "Enable the single block super pickaxe mode",
+        desc = "Включает суперкирку",
         min = 0,
         max = 0
     )
@@ -52,13 +52,13 @@ public class SuperPickaxeCommands {
 
         session.setSuperPickaxe(new SinglePickaxe());
         session.enableSuperPickAxe();
-        player.print("Mode changed. Left click with a pickaxe. // to disable.");
+        player.print("Суперкирка активирована. Левый клик киркой для разрушение блока. // для отключения.");
     }
 
     @Command(
         aliases = { "area" },
         usage = "<radius>",
-        desc = "Enable the area super pickaxe pickaxe mode",
+        desc = "Включает суперкирку в указанном радиусе.",
         min = 1,
         max = 1
     )
@@ -70,19 +70,19 @@ public class SuperPickaxeCommands {
         int range = args.getInteger(0);
 
         if (range > config.maxSuperPickaxeSize) {
-            player.printError("Maximum range: " + config.maxSuperPickaxeSize);
+            player.printError("Максимальный размер: " + config.maxSuperPickaxeSize);
             return;
         }
 
         session.setSuperPickaxe(new AreaPickaxe(range));
         session.enableSuperPickAxe();
-        player.print("Mode changed. Left click with a pickaxe. // to disable.");
+        player.print("Суперкирка активирована. Левый клик киркой для разрушение блока. // для отключения.");
     }
 
     @Command(
         aliases = { "recur", "recursive" },
         usage = "<radius>",
-        desc = "Enable the recursive super pickaxe pickaxe mode",
+        desc = "Включает рекурсивную суперкирку.",
         min = 1,
         max = 1
     )
@@ -94,12 +94,12 @@ public class SuperPickaxeCommands {
         double range = args.getDouble(0);
 
         if (range > config.maxSuperPickaxeSize) {
-            player.printError("Maximum range: " + config.maxSuperPickaxeSize);
+            player.printError("Максимальный размер: " + config.maxSuperPickaxeSize);
             return;
         }
 
         session.setSuperPickaxe(new RecursivePickaxe(range));
         session.enableSuperPickAxe();
-        player.print("Mode changed. Left click with a pickaxe. // to disable.");
+        player.print("Суперкирка активирована. Левый клик киркой для разрушение блока. // для отключения.");
     }
 }
