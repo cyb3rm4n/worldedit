@@ -21,6 +21,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.regions.FlatRegion;
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.util.StringUtil;
 
 public class BiomeCommands {
 
@@ -31,14 +32,14 @@ public class BiomeCommands {
     }
 
     @Command(
-        aliases = { "biomelist", "biomels" },
-        usage = "[page]",
-        desc = "Получает список всех биомов.",
-        max = 1
+            aliases = {"biomelist", "biomels"},
+            usage = "[page]",
+            desc = "Получает список всех биомов.",
+            max = 1
     )
     @CommandPermissions("worldedit.biome.list")
     public void biomeList(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                          EditSession editSession) throws WorldEditException {
 
         int page;
         int offset;
@@ -67,19 +68,19 @@ public class BiomeCommands {
     }
 
     @Command(
-        aliases = { "biomeinfo" },
-        flags = "pt",
-        desc = "Получает биом блока на который Вы смотрите.",
-        help =
-            "Получение биома блока.\n" +
-            "По умолчанию получает все блоки, которые Вы выделили.\n" +
-            "-t использует блок,на который Вы смотрите.\n" +
-            "-p использует блок,на котором Вы стоите",
-        max = 0
+            aliases = {"biomeinfo"},
+            flags = "pt",
+            desc = "Получает биом блока на который Вы смотрите.",
+            help =
+                    "Получение биома блока.\n" +
+                            "По умолчанию получает все блоки, которые Вы выделили.\n" +
+                            "-t использует блок,на который Вы смотрите.\n" +
+                            "-p использует блок,на котором Вы стоите",
+            max = 0
     )
     @CommandPermissions("worldedit.biome.info")
     public void biomeInfo(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                          EditSession editSession) throws WorldEditException {
 
         if (args.hasFlag('t')) {
             Vector blockPosition = player.getBlockTrace(300);
@@ -116,7 +117,7 @@ public class BiomeCommands {
     }
 
     @Command(
-            aliases = { "/setbiome" },
+            aliases = {"/setbiome"},
             usage = "<biome>",
             flags = "p",
             desc = "Устанавливает биом текущего блока,на котором Вы стоите или региона.",
@@ -130,7 +131,7 @@ public class BiomeCommands {
     @Logging(REGION)
     @CommandPermissions("worldedit.biome.set")
     public void setBiome(CommandContext args, LocalSession session, LocalPlayer player,
-                          EditSession editSession) throws WorldEditException {
+                         EditSession editSession) throws WorldEditException {
 
         final BiomeType target = we.getServer().getBiomes().get(args.getString(0));
         if (target == null) {
@@ -155,15 +156,14 @@ public class BiomeCommands {
             } else {
                 HashSet<Long> alreadyVisited = new HashSet<Long>();
                 for (Vector pt : region) {
-                    if (!alreadyVisited.contains((long)pt.getBlockX() << 32 | pt.getBlockZ())) {
-                        alreadyVisited.add(((long)pt.getBlockX() << 32 | pt.getBlockZ()));
+                    if (!alreadyVisited.contains((long) pt.getBlockX() << 32 | pt.getBlockZ())) {
+                        alreadyVisited.add(((long) pt.getBlockX() << 32 | pt.getBlockZ()));
                         world.setBiome(pt.toVector2D(), target);
                         ++affected;
                     }
                 }
             }
-            //TODO: добавить множественную форму
-            player.print("Биом изменен на " + target.getName() + ". " + affected + " columns affected.");
+            player.print("Биом изменен на " + target.getName() + ". " + affected + " " + StringUtil.plural(affected, "чанк заменен", "чанка заменено", "чанков заменено") + ".");
         }
     }
 }
