@@ -164,7 +164,7 @@ public class GeneralCommands {
             if (type != null) {
                 player.print("#" + type.getID() + " (" + type.getName() + ")");
             } else {
-                player.printError("Предмета под названием " + id + "не найдено");
+                player.printError("Предмета под названием " + id + " не найдено");
             }
 
             return;

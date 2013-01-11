@@ -74,7 +74,7 @@ public class ClipboardCommands {
         }
         session.setClipboard(clipboard);
 
-        player.print("Block(s) copied.");
+        player.print("Блок(и) скопирован(ы).");
     }
 
     @Command(
