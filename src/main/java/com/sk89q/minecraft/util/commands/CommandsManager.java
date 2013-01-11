@@ -447,7 +447,7 @@ public abstract class CommandsManager<T> {
             if (parent == null) { // Root
                 throw new UnhandledCommandException();
             } else {
-                throw new MissingNestedCommandException("Unknown command: " + cmdName,
+                throw new MissingNestedCommandException("Неизвестная команда: " + cmdName,
                         getNestedUsage(args, level - 1, parent, player));
             }
         }
@@ -458,7 +458,7 @@ public abstract class CommandsManager<T> {
 
         if (method.isAnnotationPresent(NestedCommand.class)) {
             if (argsCount == 0) {
-                throw new MissingNestedCommandException("Sub-command required.",
+                throw new MissingNestedCommandException("Требуется суб-команда.",
                         getNestedUsage(args, level, method, player));
             } else {
                 executeMethod(method, args, player, methodArgs, level + 1);
@@ -487,17 +487,17 @@ public abstract class CommandsManager<T> {
             CommandContext context = new CommandContext(newArgs, valueFlags);
 
             if (context.argsLength() < cmd.min()) {
-                throw new CommandUsageException("Too few arguments.", getUsage(args, level, cmd));
+                throw new CommandUsageException("Не достаточно параметров.", getUsage(args, level, cmd));
             }
 
             if (cmd.max() != -1 && context.argsLength() > cmd.max()) {
-                throw new CommandUsageException("Too many arguments.", getUsage(args, level, cmd));
+                throw new CommandUsageException("Слишком много параметров.", getUsage(args, level, cmd));
             }
 
             if (!cmd.anyFlags()) {
                 for (char flag : context.getFlags()) {
                     if (!newFlags.contains(flag)) {
-                        throw new CommandUsageException("Unknown flag: " + flag, getUsage(args, level, cmd));
+                        throw new CommandUsageException("Неизвестный флаг: " + flag, getUsage(args, level, cmd));
                     }
                 }
             }

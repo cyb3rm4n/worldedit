@@ -101,9 +101,9 @@ public class CuboidRegionSelector implements RegionSelector, CUIRegion {
 
     public void explainPrimarySelection(LocalPlayer player, LocalSession session, Vector pos) {
         if (pos1 != null && pos2 != null) {
-            player.print("First position set to " + pos1 + " (" + region.getArea() + ").");
+            player.print("Первая точка указана " + pos1 + " (" + region.getArea() + ").");
         } else {
-            player.print("First position set to " + pos1 + ".");
+            player.print("Первая точка указана " + pos1 + ".");
         }
 
         session.dispatchCUIEvent(player, new SelectionPointEvent(0, pos, getArea()));
@@ -111,9 +111,9 @@ public class CuboidRegionSelector implements RegionSelector, CUIRegion {
 
     public void explainSecondarySelection(LocalPlayer player, LocalSession session, Vector pos) {
         if (pos1 != null && pos2 != null) {
-            player.print("Second position set to " + pos2 + " (" + region.getArea() + ").");
+            player.print("Вторая точка указана " + pos2 + " (" + region.getArea() + ").");
         } else {
-            player.print("Second position set to " + pos2 + ".");
+            player.print("Вторая точка указана " + pos2 + ".");
         }
 
         session.dispatchCUIEvent(player, new SelectionPointEvent(1, pos, getArea()));
