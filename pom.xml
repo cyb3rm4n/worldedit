@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.sk89q</groupId>
   <artifactId>worldedit</artifactId>
-  <version>5.4.6-TEMPFIX2</version>
+  <version>5.5.1-SNAPSHOT</version>
   <name>WorldEdit</name>
   <description>WorldEdit allows for editing the Minecraft SMP world
     en-masse, de-griefing, and fixing issues.</description>
@@ -83,14 +83,14 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.4.6-R0.2-SNAPSHOT</version>
+      <version>1.4.6-R0.2</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>craftbukkit</artifactId>
-      <version>1.4.6-R0.2-SNAPSHOT</version>
+      <version>1.4.7-R0.2</version>
       <scope>compile</scope>
       <optional>true</optional>
     </dependency>

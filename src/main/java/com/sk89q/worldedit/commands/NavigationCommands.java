@@ -146,7 +146,7 @@ public class NavigationCommands {
     )
     @CommandPermissions("worldedit.navigation.thru.command")
     public void thru(CommandContext args, LocalSession session, LocalPlayer player,
-                     EditSession editSession) throws WorldEditException {
+            EditSession editSession) throws WorldEditException {
         if (player.passThroughForwardWall(6)) {
             player.print("Уииии!");
         } else {
@@ -163,7 +163,7 @@ public class NavigationCommands {
     )
     @CommandPermissions("worldedit.navigation.jumpto.command")
     public void jumpTo(CommandContext args, LocalSession session, LocalPlayer player,
-                       EditSession editSession) throws WorldEditException {
+            EditSession editSession) throws WorldEditException {
 
         WorldVector pos = player.getSolidBlockTrace(300);
         if (pos != null) {

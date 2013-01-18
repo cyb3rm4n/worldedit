@@ -19,17 +19,33 @@
 
 package com.sk89q.worldedit.commands;
 
+import static com.sk89q.minecraft.util.commands.Logging.LogMode.POSITION;
+import static com.sk89q.minecraft.util.commands.Logging.LogMode.REGION;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandAlias;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandPermissions;
-import com.sk89q.worldedit.*;
+import com.sk89q.minecraft.util.commands.Logging;
+import com.sk89q.worldedit.Countable;
+import com.sk89q.worldedit.CuboidClipboard;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.LocalPlayer;
+import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.LocalWorld;
+import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.Vector2D;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.data.ChunkStore;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
+import com.sk89q.worldedit.regions.CylinderRegionSelector;
 import com.sk89q.worldedit.regions.EllipsoidRegionSelector;
 import com.sk89q.worldedit.regions.ExtendingCuboidRegionSelector;
 import com.sk89q.worldedit.regions.Polygonal2DRegionSelector;
@@ -60,6 +76,7 @@ public class SelectionCommands {
             min = 0,
             max = 1
     )
+    @Logging(POSITION)
     @CommandPermissions("worldedit.selection.pos")
     public void pos1(CommandContext args, LocalSession session, LocalPlayer player,
                      EditSession editSession) throws WorldEditException {
@@ -94,6 +111,7 @@ public class SelectionCommands {
             min = 0,
             max = 1
     )
+    @Logging(POSITION)
     @CommandPermissions("worldedit.selection.pos")
     public void pos2(CommandContext args, LocalSession session, LocalPlayer player,
                      EditSession editSession) throws WorldEditException {
@@ -188,6 +206,7 @@ public class SelectionCommands {
             min = 0,
             max = 0
     )
+    @Logging(POSITION)
     @CommandPermissions("worldedit.selection.chunk")
     public void chunk(CommandContext args, LocalSession session, LocalPlayer player,
                       EditSession editSession) throws WorldEditException {
@@ -272,6 +291,7 @@ public class SelectionCommands {
             min = 1,
             max = 3
     )
+    @Logging(REGION)
     @CommandPermissions("worldedit.selection.expand")
     public void expand(CommandContext args, LocalSession session, LocalPlayer player,
                        EditSession editSession) throws WorldEditException {
@@ -348,6 +368,7 @@ public class SelectionCommands {
             min = 1,
             max = 3
     )
+    @Logging(REGION)
     @CommandPermissions("worldedit.selection.contract")
     public void contract(CommandContext args, LocalSession session, LocalPlayer player,
                          EditSession editSession) throws WorldEditException {
@@ -403,6 +424,7 @@ public class SelectionCommands {
             min = 1,
             max = 2
     )
+    @Logging(REGION)
     @CommandPermissions("worldedit.selection.shift")
     public void shift(CommandContext args, LocalSession session, LocalPlayer player,
                       EditSession editSession) throws WorldEditException {
@@ -441,6 +463,7 @@ public class SelectionCommands {
             min = 1,
             max = 1
     )
+    @Logging(REGION)
     @CommandPermissions("worldedit.selection.outset")
     public void outset(CommandContext args, LocalSession session, LocalPlayer player,
                        EditSession editSession) throws WorldEditException {
@@ -464,6 +487,7 @@ public class SelectionCommands {
             min = 1,
             max = 1
     )
+    @Logging(REGION)
     @CommandPermissions("worldedit.selection.inset")
     public void inset(CommandContext args, LocalSession session, LocalPlayer player,
                       EditSession editSession) throws WorldEditException {
