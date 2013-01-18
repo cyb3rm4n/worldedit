@@ -59,6 +59,7 @@ import com.sk89q.worldedit.blocks.ItemType;
 import com.sk89q.worldedit.blocks.MobSpawnerBlock;
 import com.sk89q.worldedit.blocks.NoteBlock;
 import com.sk89q.worldedit.blocks.SignBlock;
+import com.sk89q.worldedit.blocks.SkullBlock;
 import com.sk89q.worldedit.commands.BiomeCommands;
 import com.sk89q.worldedit.commands.ChunkCommands;
 import com.sk89q.worldedit.commands.ClipboardCommands;
@@ -538,6 +539,43 @@ public class WorldEdit {
                             }
                         } else {
                             return new NoteBlock(data, (byte) 0);
+                        }
+
+                    case HEAD:
+                        // allow setting type/player/rotation
+                        if (blockAndExtraData.length > 1) {
+                            // and thus, the format shall be "|type|rotation" or "|type" or "|rotation"
+                            byte rot = 0;
+                            String type = "";
+                            try {
+                                rot = Byte.parseByte(blockAndExtraData[1]);
+                            } catch (NumberFormatException e) {
+                                type = blockAndExtraData[1];
+                                if (blockAndExtraData.length > 2) {
+                                    try {
+                                        rot = Byte.parseByte(blockAndExtraData[2]);
+                                    } catch (NumberFormatException e2) {
+                                        throw new InvalidItemException(arg, "Second part of skull metadata should be a number.");
+                                    }
+                                }
+                            }
+                            byte skullType = 0;
+                            // type is either the mob type or the player name
+                            // sorry for the four minecraft accounts named "skeleton", "wither", "zombie", or "creeper"
+                            if (!type.isEmpty()) {
+                                if (type.equalsIgnoreCase("skeleton")) skullType = 0;
+                                else if (type.equalsIgnoreCase("wither")) skullType = 1;
+                                else if (type.equalsIgnoreCase("zombie")) skullType = 2;
+                                else if (type.equalsIgnoreCase("creeper")) skullType = 4;
+                                else skullType = 3;
+                            }
+                            if (skullType == 3) {
+                                return new SkullBlock(data, rot, type.replace(" ", "_")); // valid MC usernames
+                            } else {
+                                return new SkullBlock(data, skullType, rot);
+                            }
+                        } else {
+                            return new SkullBlock(data);
                         }
 
                     default:
@@ -1079,7 +1117,7 @@ public class WorldEdit {
             blockBag.flushChanges();
         }
 
-        Set<Integer> missingBlocks = editSession.popMissingBlocks();
+        Map<Integer, Integer> missingBlocks = editSession.popMissingBlocks();
 
         if (missingBlocks.size() > 0) {
             StringBuilder str = new StringBuilder();
@@ -1087,12 +1125,14 @@ public class WorldEdit {
             int size = missingBlocks.size();
             int i = 0;
 
-            for (Integer id : missingBlocks) {
+            for (Integer id : missingBlocks.keySet()) {
                 BlockType type = BlockType.fromID(id);
 
                 str.append(type != null
                         ? type.getName() + " (" + id + ")"
                         : id.toString());
+
+                str.append(" [Amt: " + missingBlocks.get(id) + "]");
 
                 ++i;
 
@@ -1352,7 +1392,7 @@ public class WorldEdit {
             try {
                 commands.execute(split, player, session, player, editSession);
             } catch (CommandPermissionsException e) {
-                player.printError("You don't have permission to do this.");
+                player.printError("У Вас не достаточно прав на использование данной команды.");
             } catch (MissingNestedCommandException e) {
                 player.printError(e.getUsage());
             } catch (CommandUsageException e) {

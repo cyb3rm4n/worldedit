@@ -447,7 +447,7 @@ public abstract class CommandsManager<T> {
             if (parent == null) { // Root
                 throw new UnhandledCommandException();
             } else {
-                throw new MissingNestedCommandException("Unknown command: " + cmdName,
+                throw new MissingNestedCommandException("Неизвестная команда: " + cmdName,
                         getNestedUsage(args, level - 1, parent, player));
             }
         }
@@ -456,9 +456,20 @@ public abstract class CommandsManager<T> {
 
         int argsCount = args.length - 1 - level;
 
-        if (method.isAnnotationPresent(NestedCommand.class)) {
+        // checks if we need to execute the body of the nested command method (false)
+        // or display the help what commands are available (true)
+        // this is all for an args count of 0 if it is > 0 and a NestedCommand Annotation is present
+        // it will always handle the methods that NestedCommand points to
+        // e.g.:
+        //  - /cmd - @NestedCommand(executeBody = true) will go into the else loop and execute code in that method
+        //  - /cmd <arg1> <arg2> - @NestedCommand(executeBody = true) will always go to the nested command class
+        //  - /cmd <arg1> - @NestedCommand(executeBody = false) will always go to the nested command class not matter the args
+        boolean executeNested = method.isAnnotationPresent(NestedCommand.class)
+                && (argsCount > 0 || !method.getAnnotation(NestedCommand.class).executeBody());
+
+        if (executeNested) {
             if (argsCount == 0) {
-                throw new MissingNestedCommandException("Sub-command required.",
+                throw new MissingNestedCommandException("Требуется суб-команда.",
                         getNestedUsage(args, level, method, player));
             } else {
                 executeMethod(method, args, player, methodArgs, level + 1);
@@ -487,17 +498,17 @@ public abstract class CommandsManager<T> {
             CommandContext context = new CommandContext(newArgs, valueFlags);
 
             if (context.argsLength() < cmd.min()) {
-                throw new CommandUsageException("Too few arguments.", getUsage(args, level, cmd));
+                throw new CommandUsageException("Не достаточно параметров.", getUsage(args, level, cmd));
             }
 
             if (cmd.max() != -1 && context.argsLength() > cmd.max()) {
-                throw new CommandUsageException("Too many arguments.", getUsage(args, level, cmd));
+                throw new CommandUsageException("Слишком много параметров.", getUsage(args, level, cmd));
             }
 
             if (!cmd.anyFlags()) {
                 for (char flag : context.getFlags()) {
                     if (!newFlags.contains(flag)) {
-                        throw new CommandUsageException("Unknown flag: " + flag, getUsage(args, level, cmd));
+                        throw new CommandUsageException("Неизвестный флаг: " + flag, getUsage(args, level, cmd));
                     }
                 }
             }

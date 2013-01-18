@@ -40,7 +40,7 @@ public class HistoryCommands {
     @Command(
         aliases = { "/undo", "undo" },
         usage = "[times] [player]",
-        desc = "Undoes the last action",
+        desc = "Отменяет последнее действие",
         min = 0,
         max = 2
     )
@@ -56,22 +56,22 @@ public class HistoryCommands {
         for (int i = 0; i < times; ++i) {
             EditSession undone;
             if (args.argsLength() < 2) {
-                undone = session.undo(session.getBlockBag(player));
+                undone = session.undo(session.getBlockBag(player), player);
             } else {
                 player.checkPermission("worldedit.history.undo.other");
                 LocalSession sess = we.getSession(args.getString(1));
                 if (sess == null) {
-                    player.printError("Unable to find session for " + args.getString(1));
+                    player.printError("Невозможно найти сессию для " + args.getString(1));
                     break;
                 }
-                undone = sess.undo(session.getBlockBag(player));
+                undone = sess.undo(session.getBlockBag(player), player);
             }
 
             if (undone != null) {
-                player.print("Undo successful.");
+                player.print("Успешно отменено.");
                 we.flushBlockBag(player, undone);
             } else {
-                player.printError("Nothing left to undo.");
+                player.printError("Отменять нечего.");
                 break;
             }
         }
@@ -82,7 +82,7 @@ public class HistoryCommands {
     @Command(
         aliases = { "/redo", "redo" },
         usage = "[times] [player]",
-        desc = "Redoes the last action (from history)",
+        desc = "Возвращает действие (из истории)",
         min = 0,
         max = 2
     )
@@ -98,22 +98,22 @@ public class HistoryCommands {
         for (int i = 0; i < times; ++i) {
             EditSession redone;
             if (args.argsLength() < 2) {
-                redone = session.redo(session.getBlockBag(player));
+                redone = session.redo(session.getBlockBag(player), player);
             } else {
                 player.checkPermission("worldedit.history.redo.other");
                 LocalSession sess = we.getSession(args.getString(1));
                 if (sess == null) {
-                    player.printError("Unable to find session for " + args.getString(1));
+                    player.printError("Невозможно найти сессию для " + args.getString(1));
                     break;
                 }
-                redone = sess.redo(session.getBlockBag(player));
+                redone = sess.redo(session.getBlockBag(player), player);
             }
 
             if (redone != null) {
-                player.print("Redo successful.");
+                player.print("Успешно восстановлено.");
                 we.flushBlockBag(player, redone);
             } else {
-                player.printError("Nothing left to redo.");
+                player.printError("Восстановливать нечего.");
             }
         }
 
@@ -123,7 +123,7 @@ public class HistoryCommands {
     @Command(
         aliases = { "/clearhistory", "clearhistory" },
         usage = "",
-        desc = "Clear your history",
+        desc = "Очищает Вашу историю",
         min = 0,
         max = 0
     )
@@ -132,6 +132,6 @@ public class HistoryCommands {
             EditSession editSession) throws WorldEditException {
 
         session.clearHistory();
-        player.print("History cleared.");
+        player.print("История очищена.");
     }
 }

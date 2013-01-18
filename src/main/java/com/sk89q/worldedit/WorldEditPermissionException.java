@@ -26,6 +26,6 @@ public class WorldEditPermissionException extends WorldEditException {
     private static final long serialVersionUID = 1L;
 
     public WorldEditPermissionException() {
-        super("You don't have permission to do this.");
+        super("У Вас не достаточно прав.");
     }
 }

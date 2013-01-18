@@ -21,6 +21,7 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.regions.FlatRegion;
 import com.sk89q.worldedit.regions.Region;
+import com.sk89q.worldedit.util.StringUtil;
 
 public class BiomeCommands {
 
@@ -31,14 +32,14 @@ public class BiomeCommands {
     }
 
     @Command(
-        aliases = { "biomelist", "biomels" },
-        usage = "[page]",
-        desc = "Gets all biomes available.",
-        max = 1
+            aliases = {"biomelist", "biomels"},
+            usage = "[page]",
+            desc = "Получает список всех биомов.",
+            max = 1
     )
     @CommandPermissions("worldedit.biome.list")
     public void biomeList(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                          EditSession editSession) throws WorldEditException {
 
         int page;
         int offset;
@@ -53,7 +54,7 @@ public class BiomeCommands {
 
         List<BiomeType> biomes = we.getServer().getBiomes().all();
         int totalPages = biomes.size() / 19 + 1;
-        player.print("Available Biomes (page " + page + "/" + totalPages + ") :");
+        player.print("Доступные биомы (страница " + page + "/" + totalPages + ") :");
         for (BiomeType biome : biomes) {
             if (offset > 0) {
                 offset--;
@@ -67,32 +68,32 @@ public class BiomeCommands {
     }
 
     @Command(
-        aliases = { "biomeinfo" },
-        flags = "pt",
-        desc = "Get the biome of the targeted block.",
-        help =
-            "Get the biome of the block.\n" +
-            "By default use all the blocks contained in your selection.\n" +
-            "-t use the block you are looking at.\n" +
-            "-p use the block you are currently in",
-        max = 0
+            aliases = {"biomeinfo"},
+            flags = "pt",
+            desc = "Получает биом блока на который Вы смотрите.",
+            help =
+                    "Получение биома блока.\n" +
+                            "По умолчанию получает все блоки, которые Вы выделили.\n" +
+                            "-t использует блок,на который Вы смотрите.\n" +
+                            "-p использует блок,на котором Вы стоите",
+            max = 0
     )
     @CommandPermissions("worldedit.biome.info")
     public void biomeInfo(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                          EditSession editSession) throws WorldEditException {
 
         if (args.hasFlag('t')) {
             Vector blockPosition = player.getBlockTrace(300);
             if (blockPosition == null) {
-                player.printError("No block in sight!");
+                player.printError("Нет блоков в поле зрения!");
                 return;
             }
 
             BiomeType biome = player.getWorld().getBiome(blockPosition.toVector2D());
-            player.print("Biome: " + biome.getName());
+            player.print("Биом: " + biome.getName());
         } else if (args.hasFlag('p')) {
             BiomeType biome = player.getWorld().getBiome(player.getPosition().toVector2D());
-            player.print("Biome: " + biome.getName());
+            player.print("Биом: " + biome.getName());
         } else {
             LocalWorld world = player.getWorld();
             Region region = session.getSelection(world);
@@ -108,7 +109,7 @@ public class BiomeCommands {
                 }
             }
 
-            player.print("Biomes:");
+            player.print("Биомы:");
             for (BiomeType biome : biomes) {
                 player.print(" " + biome.getName());
             }
@@ -116,32 +117,32 @@ public class BiomeCommands {
     }
 
     @Command(
-            aliases = { "/setbiome" },
+            aliases = {"/setbiome"},
             usage = "<biome>",
             flags = "p",
-            desc = "Sets the biome of the player's current block or region.",
+            desc = "Устанавливает биом текущего блока,на котором Вы стоите или региона.",
             help =
-                    "Set the biome of the region.\n" +
-                            "By default use all the blocks contained in your selection.\n" +
-                            "-p use the block you are currently in",
+                    "Устанавливает биом региона.\n" +
+                            "По умолчанию все блоки в регионе.\n" +
+                            "-p использовать блок, на котором Вы сейчас стоите.",
             min = 1,
             max = 1
     )
     @Logging(REGION)
     @CommandPermissions("worldedit.biome.set")
     public void setBiome(CommandContext args, LocalSession session, LocalPlayer player,
-                          EditSession editSession) throws WorldEditException {
+                         EditSession editSession) throws WorldEditException {
 
         final BiomeType target = we.getServer().getBiomes().get(args.getString(0));
         if (target == null) {
-            player.printError("Biome '" + args.getString(0) + "' does not exist!");
+            player.printError("Биома '" + args.getString(0) + "' не существует!");
             return;
         }
 
         if (args.hasFlag('p')) {
             Vector2D pos = player.getPosition().toVector2D();
             player.getWorld().setBiome(pos, target);
-            player.print("Biome changed to " + target.getName() + " at your current location.");
+            player.print("Биом изменен на " + target.getName() + " в текущем местоположении.");
         } else {
             int affected = 0;
             LocalWorld world = player.getWorld();
@@ -155,15 +156,14 @@ public class BiomeCommands {
             } else {
                 HashSet<Long> alreadyVisited = new HashSet<Long>();
                 for (Vector pt : region) {
-                    if (!alreadyVisited.contains((long)pt.getBlockX() << 32 | pt.getBlockZ())) {
-                        alreadyVisited.add(((long)pt.getBlockX() << 32 | pt.getBlockZ()));
+                    if (!alreadyVisited.contains((long) pt.getBlockX() << 32 | pt.getBlockZ())) {
+                        alreadyVisited.add(((long) pt.getBlockX() << 32 | pt.getBlockZ()));
                         world.setBiome(pt.toVector2D(), target);
                         ++affected;
                     }
                 }
             }
-
-            player.print("Biome changed to " + target.getName() + ". " + affected + " columns affected.");
+            player.print("Биом изменен на " + target.getName() + ". " + affected + " " + StringUtil.plural(affected, "чанк заменен", "чанка заменено", "чанков заменено") + ".");
         }
     }
 }

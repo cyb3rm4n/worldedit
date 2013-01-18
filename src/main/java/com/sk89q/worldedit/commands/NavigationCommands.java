@@ -31,10 +31,11 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.WorldVector;
+import com.sk89q.worldedit.util.StringUtil;
 
 /**
  * Navigation commands.
- * 
+ *
  * @author sk89q
  */
 public class NavigationCommands {
@@ -46,30 +47,30 @@ public class NavigationCommands {
     }
 
     @Command(
-        aliases = { "unstuck", "!" },
-        usage = "",
-        desc = "Escape from being stuck inside a block",
-        min = 0,
-        max = 0
+            aliases = {"unstuck", "!"},
+            usage = "",
+            desc = "Выбраться из блока.",
+            min = 0,
+            max = 0
     )
     @CommandPermissions("worldedit.navigation.unstuck")
     public void unstuck(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                        EditSession editSession) throws WorldEditException {
 
-        player.print("There you go!");
+        player.print("Свободен!");
         player.findFreePosition();
     }
 
     @Command(
-        aliases = { "ascend", "asc" },
-        usage = "[# of levels]",
-        desc = "Go up a floor",
-        min = 0,
-        max = 1
+            aliases = {"ascend", "asc"},
+            usage = "[# of levels]",
+            desc = "Подняться на этаж выше.",
+            min = 0,
+            max = 1
     )
     @CommandPermissions("worldedit.navigation.ascend")
     public void ascend(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                       EditSession editSession) throws WorldEditException {
         int levelsToAscend = 0;
         if (args.argsLength() == 0) {
             levelsToAscend = 1;
@@ -81,22 +82,22 @@ public class NavigationCommands {
             ++ascentLevels;
         }
         if (ascentLevels == 0) {
-            player.printError("No free spot above you found.");
+            player.printError("Нет свободного места выше, которое вы нашли.");
         } else {
-            player.print((ascentLevels != 1) ? "Ascended " + Integer.toString(ascentLevels) + " levels." : "Ascended a level.");
+            player.print((ascentLevels != 1) ? "Вы поднялись на " + Integer.toString(ascentLevels) + " " + StringUtil.plural(ascentLevels, "уровень", "уровня", "уровней") + "." : "Подняться на уровни(вень).");
         }
     }
 
     @Command(
-        aliases = { "descend", "desc" },
-        usage = "[# of floors]",
-        desc = "Go down a floor",
-        min = 0,
-        max = 1
+            aliases = {"descend", "desc"},
+            usage = "[# of floors]",
+            desc = "Подняться на этаж ниже",
+            min = 0,
+            max = 1
     )
     @CommandPermissions("worldedit.navigation.descend")
     public void descend(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                        EditSession editSession) throws WorldEditException {
         int levelsToDescend = 0;
         if (args.argsLength() == 0) {
             levelsToDescend = 1;
@@ -108,57 +109,57 @@ public class NavigationCommands {
             ++descentLevels;
         }
         if (descentLevels == 0) {
-            player.printError("No free spot above you found.");
+            player.printError("Нет свободного места ниже, которое вы нашли.");
         } else {
-            player.print((descentLevels != 1) ? "Descended " + Integer.toString(descentLevels) + " levels." : "Descended a level.");
+            player.print((descentLevels != 1) ? "Вы опустились на " + Integer.toString(descentLevels) + " уровней(ня)." : "Опуститься на уровни(вень).");
         }
     }
 
     @Command(
-        aliases = { "ceil" },
-        usage = "[clearance]",
-        desc = "Go to the celing",
-        min = 0,
-        max = 1
+            aliases = {"ceil"},
+            usage = "[clearance]",
+            desc = "Перейти на потолок",
+            min = 0,
+            max = 1
     )
     @CommandPermissions("worldedit.navigation.ceiling")
     @Logging(POSITION)
     public void ceiling(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                        EditSession editSession) throws WorldEditException {
 
         int clearence = args.argsLength() > 0 ?
-            Math.max(0, args.getInteger(0)) : 0;
+                Math.max(0, args.getInteger(0)) : 0;
 
         if (player.ascendToCeiling(clearence)) {
-            player.print("Whoosh!");
+            player.print("Уииии!");
         } else {
-            player.printError("No free spot above you found.");
+            player.printError("Нет свободного места, которое вы нашли.");
         }
     }
 
     @Command(
-        aliases = { "thru" },
-        usage = "",
-        desc = "Passthrough walls",
-        min = 0,
-        max = 0
+            aliases = {"thru"},
+            usage = "",
+            desc = "Проходить сквозь стены",
+            min = 0,
+            max = 0
     )
     @CommandPermissions("worldedit.navigation.thru.command")
     public void thru(CommandContext args, LocalSession session, LocalPlayer player,
             EditSession editSession) throws WorldEditException {
         if (player.passThroughForwardWall(6)) {
-            player.print("Whoosh!");
+            player.print("Уииии!");
         } else {
-            player.printError("No free spot ahead of you found.");
+            player.printError("Свободного места перед Вами не найдено.");
         }
     }
 
     @Command(
-        aliases = { "jumpto", "j" },
-        usage = "",
-        desc = "Teleport to a location",
-        min = 0,
-        max = 0
+            aliases = {"jumpto", "j"},
+            usage = "",
+            desc = "Телепорт на координаты",
+            min = 0,
+            max = 0
     )
     @CommandPermissions("worldedit.navigation.jumpto.command")
     public void jumpTo(CommandContext args, LocalSession session, LocalPlayer player,
@@ -167,30 +168,30 @@ public class NavigationCommands {
         WorldVector pos = player.getSolidBlockTrace(300);
         if (pos != null) {
             player.findFreePosition(pos);
-            player.print("Poof!");
+            player.print("Бум!");
         } else {
-            player.printError("No block in sight!");
+            player.printError("Блоков в поле зрения нет!");
         }
     }
 
     @Command(
-        aliases = { "up" },
-        usage = "<block>",
-        desc = "Go upwards some distance",
-        min = 1,
-        max = 1
+            aliases = {"up"},
+            usage = "<block>",
+            desc = "Подняться вверх на некоторое расстояние",
+            min = 1,
+            max = 1
     )
     @CommandPermissions("worldedit.navigation.up")
     @Logging(POSITION)
     public void up(CommandContext args, LocalSession session, LocalPlayer player,
-            EditSession editSession) throws WorldEditException {
+                   EditSession editSession) throws WorldEditException {
 
         int distance = args.getInteger(0);
 
         if (player.ascendUpwards(distance)) {
-            player.print("Whoosh!");
+            player.print("Уииии!");
         } else {
-            player.printError("You would hit something above you.");
+            player.printError("Вас ударило что-то выше Вас.");
         }
     }
 }

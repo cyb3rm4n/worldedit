@@ -40,7 +40,7 @@ public class ToolCommands {
     @Command(
         aliases = { "none" },
         usage = "",
-        desc = "Unbind a bound tool from your current item",
+        desc = "Отвязывает данный инструмент от назначеного действия.",
         min = 0,
         max = 0
     )
@@ -48,13 +48,13 @@ public class ToolCommands {
             EditSession editSession) throws WorldEditException {
 
         session.setTool(player.getItemInHand(), null);
-        player.print("Tool unbound from your current item.");
+        player.print("Инструмент отвязан.");
     }
 
     @Command(
         aliases = { "info" },
         usage = "",
-        desc = "Block information tool",
+        desc = "Информация о блоке",
         min = 0,
         max = 0
     )
@@ -63,14 +63,14 @@ public class ToolCommands {
             EditSession editSession) throws WorldEditException {
 
         session.setTool(player.getItemInHand(), new QueryTool());
-        player.print("Info tool bound to "
+        player.print("Информация о инструменте связана с "
                 + ItemType.toHeldName(player.getItemInHand()) + ".");
     }
 
     @Command(
         aliases = { "tree" },
         usage = "[type]",
-        desc = "Tree generator tool",
+        desc = "Генератор дереьев",
         min = 0,
         max = 1
     )
@@ -84,19 +84,19 @@ public class ToolCommands {
                 : TreeGenerator.TreeType.TREE;
 
         if (type == null) {
-            player.printError("Tree type '" + args.getString(0) + "' is unknown.");
+            player.printError("Тип дерева '" + args.getString(0) + "' неизвестен.");
             return;
         }
 
         session.setTool(player.getItemInHand(), new TreePlanter(new TreeGenerator(type)));
-        player.print("Tree tool bound to "
+        player.print("Функция генерации деревьев добавлена на предмет "
                 + ItemType.toHeldName(player.getItemInHand()) + ".");
     }
 
     @Command(
         aliases = { "repl" },
         usage = "<block>",
-        desc = "Block replacer tool",
+        desc = "Заменитель блоков",
         min = 1,
         max = 1
     )
@@ -106,14 +106,14 @@ public class ToolCommands {
 
         BaseBlock targetBlock = we.getBlock(player, args.getString(0));
         session.setTool(player.getItemInHand(), new BlockReplacer(targetBlock));
-        player.print("Block replacer tool bound to "
+        player.print("Инструмент замены блоков поставлен на предмет "
                 + ItemType.toHeldName(player.getItemInHand()) + ".");
     }
 
     @Command(
         aliases = { "cycler" },
         usage = "",
-        desc = "Block data cycler tool",
+        desc = "Генерирует цилиндры",
         min = 0,
         max = 0
     )
@@ -122,14 +122,14 @@ public class ToolCommands {
             EditSession editSession) throws WorldEditException {
 
         session.setTool(player.getItemInHand(), new BlockDataCyler());
-        player.print("Block data cycler tool bound to "
+        player.print("Функция генерации цилиндров установена на предмет "
                 + ItemType.toHeldName(player.getItemInHand()) + ".");
     }
 
     @Command(
         aliases = { "floodfill", "flood" },
         usage = "<pattern> <range>",
-        desc = "Flood fill tool",
+        desc = "Заполнитель пола",
         min = 2,
         max = 2
     )
@@ -141,19 +141,19 @@ public class ToolCommands {
         int range = args.getInteger(1);
 
         if (range > config.maxSuperPickaxeSize) {
-            player.printError("Maximum range: " + config.maxSuperPickaxeSize);
+            player.printError("Максимальный размер: " + config.maxSuperPickaxeSize);
             return;
         }
 
         Pattern pattern = we.getBlockPattern(player, args.getString(0));
         session.setTool(player.getItemInHand(), new FloodFillTool(range, pattern));
-        player.print("Block flood fill tool bound to "
+        player.print("Функция заполнения пола установлена на предмет "
                 + ItemType.toHeldName(player.getItemInHand()) + ".");
     }
 
     @Command(
         aliases = { "brush", "br" },
-        desc = "Brush tool"
+        desc = "Кисть"
     )
     @NestedCommand(BrushCommands.class)
     public void brush(CommandContext args, LocalSession session, LocalPlayer player,
@@ -163,7 +163,7 @@ public class ToolCommands {
     @Command(
             aliases = { "deltree" },
             usage = "",
-            desc = "Floating tree remover tool",
+            desc = "Инструмент для удаления деревьев",
             min = 0,
             max = 0
     )
@@ -172,14 +172,14 @@ public class ToolCommands {
             EditSession editSession) throws WorldEditException {
 
     session.setTool(player.getItemInHand(), new FloatingTreeRemover());
-    player.print("Floating tree remover tool bound to "
+    player.print("Функция удаления предметов задана на предмет "
             + ItemType.toHeldName(player.getItemInHand()) + ".");
     }
 
     @Command(
             aliases = { "farwand" },
             usage = "",
-            desc = "Wand at a distance tool",
+            desc = "Инструмент выделения на расстоянии",
             min = 0,
             max = 0
     )
@@ -188,13 +188,13 @@ public class ToolCommands {
             EditSession editSession) throws WorldEditException {
 
         session.setTool(player.getItemInHand(), new DistanceWand());
-        player.print("Far wand tool bound to " + ItemType.toHeldName(player.getItemInHand()) + ".");
+        player.print("Функция выделения на расстоянии задана на предмет " + ItemType.toHeldName(player.getItemInHand()) + ".");
     }
 
     @Command(
             aliases = { "lrbuild", "/lrbuild" },
             usage = "<leftclick block> <rightclick block>",
-            desc = "Long-range building tool",
+            desc = "Строительный инструмент",
             min = 2,
             max = 2
     )
@@ -205,8 +205,8 @@ public class ToolCommands {
         BaseBlock secondary = we.getBlock(player, args.getString(0));
         BaseBlock primary = we.getBlock(player, args.getString(1));
         session.setTool(player.getItemInHand(), new LongRangeBuildTool(primary, secondary));
-        player.print("Long-range building tool bound to " + ItemType.toHeldName(player.getItemInHand()) + ".");
-        player.print("Left-click set to " + ItemType.toName(secondary.getType()) + "; right-click set to "
+        player.print("Функция стройки задана на предмет " + ItemType.toHeldName(player.getItemInHand()) + ".");
+        player.print("Левый клик задан на " + ItemType.toName(secondary.getType()) + "; Правый клик задан на "
                 + ItemType.toName(primary.getType()) + ".");
     }
 }
