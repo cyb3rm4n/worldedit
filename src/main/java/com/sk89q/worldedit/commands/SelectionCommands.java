@@ -261,7 +261,7 @@ public class SelectionCommands {
                      EditSession editSession) throws WorldEditException {
 
         player.giveItem(we.getConfiguration().wandItem, 1);
-        player.print("Левый клик: выделение первой позиции; Правый клик: выделение второй точки");
+        player.print("Левый клик: выделение первой точки; Правый клик: выделение второй точки");
     }
 
     @Command(
