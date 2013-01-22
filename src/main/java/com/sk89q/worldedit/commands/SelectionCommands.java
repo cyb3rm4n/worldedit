@@ -42,6 +42,7 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.Vector2D;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.data.ChunkStore;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
@@ -566,62 +567,96 @@ public class SelectionCommands {
             aliases = {"/count"},
             usage = "<block>",
             desc = "Подсчет количества определенного типа блока",
+            flags = "d",
             min = 1,
             max = 1
     )
     @CommandPermissions("worldedit.analysis.count")
     public void count(CommandContext args, LocalSession session, LocalPlayer player,
-                      EditSession editSession) throws WorldEditException {
+            EditSession editSession) throws WorldEditException {
 
-        Set<Integer> searchIDs = we.getBlockIDs(player,
-                args.getString(0), true);
-        int a = editSession.countBlocks(session.getSelection(player.getWorld()), searchIDs);
-        player.print("В выделенной территории " +
-                a + StringUtil.plural(a, " блок", " блока", " блоков") + " заданного типа.");
+        boolean useData = args.hasFlag('d');
+        if (args.getString(0).contains(":")) {
+            useData = true; //override d flag, if they specified data they want it
+        }
+        if (useData) {
+            Set<BaseBlock> searchBlocks = we.getBlocks(player, args.getString(0), true);
+            int count = editSession.countBlocks(session.getSelection(player.getWorld()), searchBlocks);
+            player.print("В выделенной территории " +
+                    count + StringUtil.plural(count, " блок", " блока", " блоков") + " заданного типа.");
+        } else {
+            Set<Integer> searchIDs = we.getBlockIDs(player, args.getString(0), true);
+            int count = editSession.countBlock(session.getSelection(player.getWorld()), searchIDs);
+            player.print("В выделенной территории " +
+                    count + StringUtil.plural(count, " блок", " блока", " блоков") + " заданного типа.");
+        }
     }
 
     @Command(
-            aliases = {"/distr"},
-            usage = "",
-            desc = "Подсчет колличества блоков в выделенной территории.",
-            help =
-                    "Считает колличество блоков в выделенной территории.\n" +
-                            "Флаг -c считет блоки в буфере обмена.",
-            flags = "c",
-            min = 0,
-            max = 0
+        aliases = { "/distr" },
+        usage = "",
+        desc = "Подсчет колличества блоков в выделенной территории.",
+        help =
+            "Считает колличество блоков в выделенной территории.\n" +
+            "Флаг -c считет блоки в буфере обмена.\n" +
+            "Флаг -d разбивает блоки по данным",
+        flags = "cd",
+        min = 0,
+        max = 0
     )
     @CommandPermissions("worldedit.analysis.distr")
     public void distr(CommandContext args, LocalSession session, LocalPlayer player,
-                      EditSession editSession) throws WorldEditException {
+            EditSession editSession) throws WorldEditException {
 
-        List<Countable<Integer>> distribution;
         int size;
+        boolean useData = args.hasFlag('d');
+        List<Countable<Integer>> distribution = null;
+        List<Countable<BaseBlock>> distributionData = null;
 
         if (args.hasFlag('c')) {
             CuboidClipboard clip = session.getClipboard();
-            distribution = clip.getBlockDistribution();
-            size = clip.getHeight() * clip.getLength() * clip.getWidth();
+            if (useData) {
+                distributionData = clip.getBlockDistributionWithData();
+            } else {
+                distribution = clip.getBlockDistribution();
+            }
+            size = clip.getHeight() * clip.getLength() * clip.getWidth(); 
         } else {
-            distribution = editSession
-                    .getBlockDistribution(session.getSelection(player.getWorld()));
+            if (useData) {
+                distributionData = editSession.getBlockDistributionWithData(session.getSelection(player.getWorld()));
+            } else {
+                distribution = editSession.getBlockDistribution(session.getSelection(player.getWorld()));
+            }
             size = session.getSelection(player.getWorld()).getArea();
         }
 
-        if (distribution.size() <= 0) {  // *Should* always be true
+        if ((useData && distributionData.size() <= 0)
+                || (!useData && distribution.size() <= 0)) {  // *Should* always be true
             player.printError("В выделенной территории блоки не найдены.");
             return;
         }
-
+        
         player.print("В выделенной территории " + size + StringUtil.plural(size, " блок", " блока", " блоков"));
 
-        for (Countable<Integer> c : distribution) {
-            BlockType block = BlockType.fromID(c.getID());
-            String str = String.format("%-7s (%.3f%%) %s #%d",
-                    String.valueOf(c.getAmount()),
-                    c.getAmount() / (double) size * 100,
-                    block == null ? "Неизвестно" : block.getName(), c.getID());
-            player.print(str);
+        if (useData) {
+            for (Countable<BaseBlock> c : distributionData) {
+                String name = BlockType.fromID(c.getID().getId()).getName();
+                String str = String.format("%-7s (%.3f%%) %s #%d:%d",
+                        String.valueOf(c.getAmount()),
+                        c.getAmount() / (double) size * 100,
+                        name == null ? "Неизвестно" : name,
+                        c.getID().getType(), c.getID().getData());
+                player.print(str);
+            }
+        } else {
+            for (Countable<Integer> c : distribution) {
+                BlockType block = BlockType.fromID(c.getID());
+                String str = String.format("%-7s (%.3f%%) %s #%d",
+                        String.valueOf(c.getAmount()),
+                        c.getAmount() / (double) size * 100,
+                        block == null ? "Неизвестно" : block.getName(), c.getID());
+                player.print(str);
+            }
         }
     }
 

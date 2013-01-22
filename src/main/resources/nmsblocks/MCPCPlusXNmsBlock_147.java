@@ -1,21 +1,3 @@
-// $Id$
-/*
- * This file is a part of WorldEdit.
- * Copyright (c) sk89q <http://www.sk89q.com>
- * Copyright (c) the WorldEdit team and contributors
- *
- * This program is free software: you can redistribute it and/or modify it under the
- * terms of the GNU Lesser General Public License as published by the Free Software
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,23 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import net.minecraft.server.v1_4_6.NBTBase;
-import net.minecraft.server.v1_4_6.NBTTagByte;
-import net.minecraft.server.v1_4_6.NBTTagByteArray;
-import net.minecraft.server.v1_4_6.NBTTagCompound;
-import net.minecraft.server.v1_4_6.NBTTagDouble;
-import net.minecraft.server.v1_4_6.NBTTagEnd;
-import net.minecraft.server.v1_4_6.NBTTagFloat;
-import net.minecraft.server.v1_4_6.NBTTagInt;
-import net.minecraft.server.v1_4_6.NBTTagIntArray;
-import net.minecraft.server.v1_4_6.NBTTagList;
-import net.minecraft.server.v1_4_6.NBTTagLong;
-import net.minecraft.server.v1_4_6.NBTTagShort;
-import net.minecraft.server.v1_4_6.NBTTagString;
-import net.minecraft.server.v1_4_6.TileEntity;
-
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_4_6.CraftWorld;
+import org.bukkit.craftbukkit.v1_4_R1.CraftWorld;
 
 import com.sk89q.jnbt.ByteArrayTag;
 import com.sk89q.jnbt.ByteTag;
@@ -57,6 +24,7 @@ import com.sk89q.jnbt.ShortTag;
 import com.sk89q.jnbt.StringTag;
 import com.sk89q.jnbt.Tag;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.TileEntityBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
@@ -65,21 +33,21 @@ import com.sk89q.worldedit.data.DataException;
 import com.sk89q.worldedit.foundation.Block;
 
 /**
- * This version needs to be built on CraftBukkit 1.4.6 R0.1 or higher
+ * Remapping tools are broken atm.
  */
-public class CBXNmsBlock_146 extends NmsBlock {
+public class MCPCPlusXNmsBlock_147 extends NmsBlock {
 
-    private static final Logger logger = Logger.getLogger(CBXNmsBlock_146.class.getCanonicalName());
+    private static final Logger logger = WorldEdit.logger;
     private static Field compoundMapField;
     private static final Field nmsBlock_isTileEntityField; // The field is deobfuscated but the method isn't. No idea why.
-    private NBTTagCompound nbtData = null;
+    private bq nbtData = null;
 
     static {
         Field field;
         try {
-            field = net.minecraft.server.v1_4_6.Block.class.getDeclaredField("isTileEntity");
+            field = amq.class.getDeclaredField("cs");
             field.setAccessible(true);
-        } catch (Throwable e) {
+        } catch (NoSuchFieldException e) {
             // logger.severe("Could not find NMS block tile entity field!");
             field = null;
         }
@@ -87,6 +55,11 @@ public class CBXNmsBlock_146 extends NmsBlock {
     }
 
     public static boolean verify() {
+        try {
+            Class.forName("org.bukkit.craftbukkit.v1_4_R1.CraftWorld");
+        } catch (Throwable e) {
+            return false;
+        }
         return nmsBlock_isTileEntityField != null;
     }
 
@@ -98,40 +71,40 @@ public class CBXNmsBlock_146 extends NmsBlock {
      * @param data data value
      * @param tileEntityBlock tile entity block
      */
-    public CBXNmsBlock_146(int type, int data, TileEntityBlock tileEntityBlock) {
+    public MCPCPlusXNmsBlock_147(int type, int data, TileEntityBlock tileEntityBlock) {
         super(type, data);
 
-        nbtData = (NBTTagCompound) fromNative(tileEntityBlock.getNbtData());
+        nbtData = (bq) fromNative(tileEntityBlock.getNbtData());
     }
 
     /**
      * Create a new instance with a given type ID, data value, and raw
-     * {@link NBTTagCompound} copy.
+     * {@link bq} copy.
      *
      * @param type block type ID
      * @param data data value
      * @param nbtData raw NBT data
      */
-    public CBXNmsBlock_146(int type, int data, NBTTagCompound nbtData) {
+    public MCPCPlusXNmsBlock_147(int type, int data, bq nbtData) {
         super(type, data);
 
         this.nbtData = nbtData;
     }
 
     /**
-     * Build a {@link NBTTagCompound} that has valid coordinates.
+     * Build a {@link bq} that has valid coordinates.
      *
      * @param pt coordinates to set
      * @return the tag compound
      */
-    private NBTTagCompound getNmsData(Vector pt) {
+    private bq getNmsData(Vector pt) {
         if (nbtData == null) {
             return null;
         }
 
-        nbtData.set("x", new NBTTagInt("x", pt.getBlockX()));
-        nbtData.set("y", new NBTTagInt("y", pt.getBlockY()));
-        nbtData.set("z", new NBTTagInt("z", pt.getBlockZ()));
+        nbtData.a("x", new bx("x", pt.getBlockX()));
+        nbtData.a("y", new bx("y", pt.getBlockY()));
+        nbtData.a("z", new bx("z", pt.getBlockZ()));
 
         return nbtData;
     }
@@ -147,7 +120,7 @@ public class CBXNmsBlock_146 extends NmsBlock {
             return "";
         }
 
-        return nbtData.getString("id");
+        return nbtData.i("id");
     }
 
     @Override
@@ -164,7 +137,7 @@ public class CBXNmsBlock_146 extends NmsBlock {
         if (tag == null) {
             this.nbtData = null;
         }
-        this.nbtData = (NBTTagCompound) fromNative(tag);
+        this.nbtData = (bq) fromNative(tag);
     }
 
     /**
@@ -176,18 +149,17 @@ public class CBXNmsBlock_146 extends NmsBlock {
      * @param data data value of block
      * @return the block, or null
      */
-    public static CBXNmsBlock_146 get(World world, Vector position, int type, int data) {
+    public static MCPCPlusXNmsBlock_147 get(World world, Vector position, int type, int data) {
         if (!hasTileEntity(type)) {
             return null;
         }
 
-        TileEntity te = ((CraftWorld) world).getHandle().getTileEntity(
-                position.getBlockX(), position.getBlockY(), position.getBlockZ());
+        any te = ((CraftWorld) world).getHandle().q(position.getBlockX(), position.getBlockY(), position.getBlockZ());
 
         if (te != null) {
-            NBTTagCompound tag = new NBTTagCompound();
+            bq tag = new bq();
             te.b(tag); // Load data
-            return new CBXNmsBlock_146(type, data, tag);
+            return new MCPCPlusXNmsBlock_147(type, data, tag);
         }
 
         return null;
@@ -202,22 +174,22 @@ public class CBXNmsBlock_146 extends NmsBlock {
      * @return true if tile entity data was copied to the world
      */
     public static boolean set(World world, Vector position, BaseBlock block) {
-        NBTTagCompound data = null;
+        bq data = null;
         if (!hasTileEntity(world.getBlockTypeIdAt(position.getBlockX(), position.getBlockY(), position.getBlockZ()))) {
             return false;
         }
 
-        if (block instanceof CBXNmsBlock_146) {
-            CBXNmsBlock_146 nmsProxyBlock = (CBXNmsBlock_146) block;
+        if (block instanceof MCPCPlusXNmsBlock_147) {
+            MCPCPlusXNmsBlock_147 nmsProxyBlock = (MCPCPlusXNmsBlock_147) block;
             data = nmsProxyBlock.getNmsData(position);
         } else if (block instanceof TileEntityBlock) {
-            CBXNmsBlock_146 nmsProxyBlock = new CBXNmsBlock_146(
+            MCPCPlusXNmsBlock_147 nmsProxyBlock = new MCPCPlusXNmsBlock_147(
                     block.getId(), block.getData(), block);
             data = nmsProxyBlock.getNmsData(position);
         }
 
         if (data != null) {
-            TileEntity te = ((CraftWorld) world).getHandle().getTileEntity(
+            any te = ((CraftWorld) world).getHandle().q(
                     position.getBlockX(), position.getBlockY(), position.getBlockZ());
             if (te != null) {
                 te.a(data); // Load data
@@ -246,9 +218,10 @@ public class CBXNmsBlock_146 extends NmsBlock {
         int z = position.getBlockZ();
 
         CraftWorld craftWorld = ((CraftWorld) world.getWorld());
+//        TileEntity te = craftWorld.getHandle().getTileEntity(x, y, z);
+//        craftWorld.getHandle().tileEntityList.remove(te);
 
-        boolean changed = craftWorld.getHandle().setRawTypeIdAndData(
-                x, y, z, block.getId(), block.getData());
+        boolean changed = craftWorld.getHandle().c(x, y, z, block.getId(), block.getData());
 
         if (block instanceof BaseBlock) {
             world.copyToWorld(position, (BaseBlock) block);
@@ -256,9 +229,9 @@ public class CBXNmsBlock_146 extends NmsBlock {
 
         if (changed) {
             if (notifyAdjacent) {
-                craftWorld.getHandle().update(x, y, z, block.getId());
+                craftWorld.getHandle().f(x, y, z, block.getId());
             } else {
-                craftWorld.getHandle().notify(x, y, z);
+                craftWorld.getHandle().i(x, y, z);
             }
         }
 
@@ -266,7 +239,7 @@ public class CBXNmsBlock_146 extends NmsBlock {
     }
 
     public static boolean hasTileEntity(int type) {
-        net.minecraft.server.v1_4_6.Block nmsBlock = getNmsBlock(type);
+        amq nmsBlock = getNmsBlock(type);
         if (nmsBlock == null) {
             return false;
         }
@@ -278,11 +251,11 @@ public class CBXNmsBlock_146 extends NmsBlock {
         }
     }
 
-    public static net.minecraft.server.v1_4_6.Block getNmsBlock(int type) {
-        if (type < 0 || type >= net.minecraft.server.v1_4_6.Block.byId.length) {
+    public static amq getNmsBlock(int type) {
+        if (type < 0 || type >= amq.p.length) {
             return null;
         }
-        return net.minecraft.server.v1_4_6.Block.byId[type];
+        return amq.p[type];
     }
 
     /**
@@ -293,25 +266,25 @@ public class CBXNmsBlock_146 extends NmsBlock {
      * @return native WorldEdit NBT structure
      */
     @SuppressWarnings("unchecked")
-    private static Tag toNative(NBTBase foreign) {
+    private static Tag toNative(cd foreign) {
         if (foreign == null) {
             return null;
         }
-        if (foreign instanceof NBTTagCompound) {
+        if (foreign instanceof bq) {
             Map<String, Tag> values = new HashMap<String, Tag>();
             Collection<Object> foreignValues = null;
 
             if (compoundMapField == null) {
                 try {
                     // Method name may change!
-                    foreignValues = ((NBTTagCompound) foreign).c();
+                    foreignValues = ((bq) foreign).c();
                 } catch (Throwable t) {
                     try {
-                        logger.warning("WorldEdit: Couldn't get NBTTagCompound.c(), " +
+                        logger.warning("WorldEdit: Couldn't get bq.c(), " +
                                 "so we're going to try to get at the 'map' field directly from now on");
 
                         if (compoundMapField == null) {
-                            compoundMapField = NBTTagCompound.class.getDeclaredField("map");
+                            compoundMapField = bq.class.getDeclaredField("map");
                             compoundMapField.setAccessible(true);
                         }
                     } catch (Throwable e) {
@@ -331,44 +304,44 @@ public class CBXNmsBlock_146 extends NmsBlock {
             }
 
             for (Object obj : foreignValues) {
-                NBTBase base = (NBTBase) obj;
-                values.put(base.getName(), toNative(base));
+                cd base = (cd) obj;
+                values.put(base.e(), toNative(base));
             }
-            return new CompoundTag(foreign.getName(), values);
-        } else if (foreign instanceof NBTTagByte) {
-            return new ByteTag(foreign.getName(), ((NBTTagByte) foreign).data);
-        } else if (foreign instanceof NBTTagByteArray) {
-            return new ByteArrayTag(foreign.getName(),
-                    ((NBTTagByteArray) foreign).data);
-        } else if (foreign instanceof NBTTagDouble) {
-            return new DoubleTag(foreign.getName(),
-                    ((NBTTagDouble) foreign).data);
-        } else if (foreign instanceof NBTTagFloat) {
-            return new FloatTag(foreign.getName(), ((NBTTagFloat) foreign).data);
-        } else if (foreign instanceof NBTTagInt) {
-            return new IntTag(foreign.getName(), ((NBTTagInt) foreign).data);
-        } else if (foreign instanceof NBTTagIntArray) {
-            return new IntArrayTag(foreign.getName(),
-                    ((NBTTagIntArray) foreign).data);
-        } else if (foreign instanceof NBTTagList) {
+            return new CompoundTag(foreign.e(), values);
+        } else if (foreign instanceof bp) {
+            return new ByteTag(foreign.e(), ((bp) foreign).a);
+        } else if (foreign instanceof bo) {
+            return new ByteArrayTag(foreign.e(),
+                    ((bo) foreign).a);
+        } else if (foreign instanceof bt) {
+            return new DoubleTag(foreign.e(),
+                    ((bt) foreign).a);
+        } else if (foreign instanceof bv) {
+            return new FloatTag(foreign.e(), ((bv) foreign).a);
+        } else if (foreign instanceof bx) {
+            return new IntTag(foreign.e(), ((bx) foreign).a);
+        } else if (foreign instanceof bw) {
+            return new IntArrayTag(foreign.e(),
+                    ((bw) foreign).a);
+        } else if (foreign instanceof by) {
             List<Tag> values = new ArrayList<Tag>();
-            NBTTagList foreignList = (NBTTagList) foreign;
+            by foreignList = (by) foreign;
             int type = NBTConstants.TYPE_BYTE;
-            for (int i = 0; i < foreignList.size(); i++) {
-                NBTBase foreignTag = foreignList.get(i);
+            for (int i = 0; i < foreignList.c(); i++) {
+                cd foreignTag = foreignList.b(i);
                 values.add(toNative(foreignTag));
-                type = foreignTag.getTypeId();
+                type = foreignTag.a();
             }
             Class<? extends Tag> cls = NBTConstants.getClassFromType(type);
-            return new ListTag(foreign.getName(), cls, values);
-        } else if (foreign instanceof NBTTagLong) {
-            return new LongTag(foreign.getName(), ((NBTTagLong) foreign).data);
-        } else if (foreign instanceof NBTTagShort) {
-            return new ShortTag(foreign.getName(), ((NBTTagShort) foreign).data);
-        } else if (foreign instanceof NBTTagString) {
-            return new StringTag(foreign.getName(),
-                    ((NBTTagString) foreign).data);
-        } else if (foreign instanceof NBTTagEnd) {
+            return new ListTag(foreign.e(), cls, values);
+        } else if (foreign instanceof bz) {
+            return new LongTag(foreign.e(), ((bz) foreign).a);
+        } else if (foreign instanceof cb) {
+            return new ShortTag(foreign.e(), ((cb) foreign).a);
+        } else if (foreign instanceof cc) {
+            return new StringTag(foreign.e(),
+                    ((cc) foreign).a);
+        } else if (foreign instanceof bu) {
             return new EndTag();
         } else {
             throw new IllegalArgumentException("Don't know how to make native "
@@ -382,53 +355,53 @@ public class CBXNmsBlock_146 extends NmsBlock {
      * @param foreign structure to convert
      * @return non-native structure
      */
-    private static NBTBase fromNative(Tag foreign) {
+    private static cd fromNative(Tag foreign) {
         if (foreign == null) {
             return null;
         }
         if (foreign instanceof CompoundTag) {
-            NBTTagCompound tag = new NBTTagCompound(foreign.getName());
+            bq tag = new bq(foreign.getName());
             for (Map.Entry<String, Tag> entry : ((CompoundTag) foreign)
                     .getValue().entrySet()) {
-                tag.set(entry.getKey(), fromNative(entry.getValue()));
+                tag.a(entry.getKey(), fromNative(entry.getValue()));
             }
             return tag;
         } else if (foreign instanceof ByteTag) {
-            return new NBTTagByte(foreign.getName(),
+            return new bp(foreign.getName(),
                     ((ByteTag) foreign).getValue());
         } else if (foreign instanceof ByteArrayTag) {
-            return new NBTTagByteArray(foreign.getName(),
+            return new bo(foreign.getName(),
                     ((ByteArrayTag) foreign).getValue());
         } else if (foreign instanceof DoubleTag) {
-            return new NBTTagDouble(foreign.getName(),
+            return new bt(foreign.getName(),
                     ((DoubleTag) foreign).getValue());
         } else if (foreign instanceof FloatTag) {
-            return new NBTTagFloat(foreign.getName(),
+            return new bv(foreign.getName(),
                     ((FloatTag) foreign).getValue());
         } else if (foreign instanceof IntTag) {
-            return new NBTTagInt(foreign.getName(),
+            return new bx(foreign.getName(),
                     ((IntTag) foreign).getValue());
         } else if (foreign instanceof IntArrayTag) {
-            return new NBTTagIntArray(foreign.getName(),
+            return new bw(foreign.getName(),
                     ((IntArrayTag) foreign).getValue());
         } else if (foreign instanceof ListTag) {
-            NBTTagList tag = new NBTTagList(foreign.getName());
+            by tag = new by(foreign.getName());
             ListTag foreignList = (ListTag) foreign;
             for (Tag t : foreignList.getValue()) {
-                tag.add(fromNative(t));
+                tag.a(fromNative(t));
             }
             return tag;
         } else if (foreign instanceof LongTag) {
-            return new NBTTagLong(foreign.getName(),
+            return new bz(foreign.getName(),
                     ((LongTag) foreign).getValue());
         } else if (foreign instanceof ShortTag) {
-            return new NBTTagShort(foreign.getName(),
+            return new cb(foreign.getName(),
                     ((ShortTag) foreign).getValue());
         } else if (foreign instanceof StringTag) {
-            return new NBTTagString(foreign.getName(),
+            return new cc(foreign.getName(),
                     ((StringTag) foreign).getValue());
         } else if (foreign instanceof EndTag) {
-            return new NBTTagEnd();
+            return new bu();
         } else {
             throw new IllegalArgumentException("Don't know how to make NMS "
                     + foreign.getClass().getCanonicalName());
@@ -436,7 +409,7 @@ public class CBXNmsBlock_146 extends NmsBlock {
     }
 
     public static boolean isValidBlockType(int type) throws NoClassDefFoundError {
-        return type == 0 || (type >= 1 && type < net.minecraft.server.v1_4_6.Block.byId.length
-                && net.minecraft.server.v1_4_6.Block.byId[type] != null);
+        return type == 0 || (type >= 1 && type < amq.p.length
+                && amq.p[type] != null);
     }
 }
