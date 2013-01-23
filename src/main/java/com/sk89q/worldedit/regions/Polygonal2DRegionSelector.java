@@ -130,7 +130,7 @@ public class Polygonal2DRegionSelector implements RegionSelector, CUIRegion {
     }
 
     public void explainPrimarySelection(LocalPlayer player, LocalSession session, Vector pos) {
-        player.print("Starting a new polygon at " + pos + ".");
+        player.print("Начало нового полигона " + pos + ".");
 
         session.dispatchCUIEvent(player, new SelectionShapeEvent(getTypeID()));
         session.dispatchCUIEvent(player, new SelectionPoint2DEvent(0, pos, getArea()));
@@ -138,7 +138,7 @@ public class Polygonal2DRegionSelector implements RegionSelector, CUIRegion {
     }
 
     public void explainSecondarySelection(LocalPlayer player, LocalSession session, Vector pos) {
-        player.print("Added point #" + region.size() + " at " + pos + ".");
+        player.print("Точка #" + region.size() + " добавлена " + pos + ".");
 
         session.dispatchCUIEvent(player, new SelectionPoint2DEvent(region.size() - 1, pos, getArea()));
         session.dispatchCUIEvent(player, new SelectionMinMaxEvent(region.getMinimumY(), region.getMaximumY()));
@@ -188,7 +188,7 @@ public class Polygonal2DRegionSelector implements RegionSelector, CUIRegion {
     }
 
     public List<String> getInformationLines() {
-        return Collections.singletonList("# points: " + region.size());
+        return Collections.singletonList("Количество точек: " + region.size());
     }
 
     public int getArea() {
